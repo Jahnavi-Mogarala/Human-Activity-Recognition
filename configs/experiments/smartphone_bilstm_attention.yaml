@@ -1,0 +1,27 @@
+model: bilstm_attention
+
+data_path: data/processed/uci_har_prepared.npz
+
+num_classes: 6
+
+# Training hyper‑parameters (configurable)
+epochs: 100
+batch_size: 64
+learning_rate: 0.001
+
+# Model architecture parameters
+hidden_size: 128
+num_layers: 2
+dropout: 0.3
+attention_dim: 64
+
+# Preprocessing parameters
+window_seconds: 2.0
+overlap: 0.5
+sampling_rate: 50
+
+# Misc
+seed: 42
+early_stopping_patience: 10
+lr_scheduler_patience: 5
+lr_scheduler_factor: 0.5

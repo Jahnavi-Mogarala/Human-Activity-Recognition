@@ -1,0 +1,10 @@
+uci_har:
+  name: "UCI Human Activity Recognition"
+  source_url: "http://archive.ics.uci.edu/ml/machine-learning-databases/00240/UCI%20HAR%20Dataset.zip"
+  license: "MIT"
+  modalities:
+    - accelerometer
+    - gyroscope
+  sampling_rate: 50
+  sensor_location: "hip"
+  device_type: "smartphone"
