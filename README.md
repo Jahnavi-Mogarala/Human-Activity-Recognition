@@ -3,13 +3,12 @@
 ## Privacy‑Preserving Human Activity Recognition Using Smartphone Sensor Fusion
 
 ### Overview
-MotionShield is an end‑to‑end machine‑learning system for recognizing human activities from smartphone motion sensors. It implements a unified data pipeline, a Bi‑LSTM + Temporal‑Attention model, and utilities for training, evaluation, and inference.
+MotionShield is an end‑to‑end system for recognizing human activities from smartphone motion sensors. It includes a data pipeline, a Bi‑LSTM with temporal‑attention model, and utilities for training, evaluation, and on‑device inference.
 
 ### Project Structure
 ```
 .
 ├── backend/            # FastAPI inference service
-├── frontend/           # React + Vite UI (currently placeholder)
 ├── ml/                 # Core ML pipeline and model definitions
 ├── data/               # Raw (downloaded) and processed dataset files
 ├── scripts/            # CLI utilities: download, prepare, train, evaluate, smoke test
@@ -33,7 +32,7 @@ MotionShield is an end‑to‑end machine‑learning system for recognizing huma
 | Sensor window preparation (128‑step) | Completed |
 | Bi‑LSTM + Temporal‑Attention model   | Completed |
 | Model smoke test                      | Passed |
-| Sanity training (2‑epoch)             | In progress |
+| Sanity training (2‑epoch)             | Completed |
 | Final model training                  | Pending |
 | Final test evaluation                 | Pending |
 | Real‑time smartphone inference         | Planned |
@@ -55,7 +54,7 @@ MotionShield is an end‑to‑end machine‑learning system for recognizing huma
 2. **Adapter** discovers dataset files and converts them to a canonical sensor schema.
 3. **Validation** checks for missing values and correct channel order.
 4. **Cleaning** removes corrupt records.
-5. **Sampling‑rate handling** preserves the native rate (no forced resampling).
+5. **Sampling‑rate handling** preserves the native rate.
 6. **Windowing** creates fixed‑length windows (128 steps).
 7. **Normalization** fitted on training data only.
 8. **Subject IDs** are retained for split generation.
@@ -69,7 +68,7 @@ MotionShield is an end‑to‑end machine‑learning system for recognizing huma
 
 ### Training & Evaluation
 - `scripts/train.py` saves checkpoints, scaler, config, label mapping, and a JSON training history.
-- `scripts/evaluate.py` loads the best checkpoint, the train‑fitted scaler, and computes comprehensive metrics (accuracy, balanced accuracy, precision, recall, macro/weighted F1, per‑class scores) and visual reports.
+- `scripts/evaluate.py` loads the best checkpoint, the train‑fitted scaler, and computes metrics (accuracy, balanced accuracy, precision, recall, macro/weighted F1, per‑class scores) along with visual reports.
 
 ### Setup Instructions
 1. **Clone the repository**
@@ -102,8 +101,8 @@ MotionShield is an end‑to‑end machine‑learning system for recognizing huma
 
 ### Notes
 - The repository does **not** contain raw dataset files; they are downloaded via the provided script.
-- Large binary artifacts (e.g., `.npz` files, model checkpoints) are kept out of version control via `.gitignore`.
+- Large binary artifacts (e.g., `.npz` files, model checkpoints) are excluded from version control via `.gitignore`.
 - Current results are limited to the sanity run; full model performance metrics will be added after final training.
 
 ---
-*This README reflects the actual state of the project as of the latest local implementation.*
+*This README reflects the actual state of the project as of the latest implementation.*
