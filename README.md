@@ -99,8 +99,6 @@ MotionShield is an end‑to‑end system for recognizing human activities from s
    python scripts/evaluate.py
    ```
 
-### Notes
-- The repository does **not** contain raw dataset files; they are downloaded via the provided script.
 - Large binary artifacts (e.g., `.npz` files, model checkpoints) are excluded from version control via `.gitignore`.
 - Current results are limited to the sanity run; full model performance metrics will be added after final training.
 
