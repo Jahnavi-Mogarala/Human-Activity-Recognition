@@ -102,5 +102,3 @@ MotionShield is an end‑to‑end system for recognizing human activities from s
 - Large binary artifacts (e.g., `.npz` files, model checkpoints) are excluded from version control via `.gitignore`.
 - Current results are limited to the sanity run; full model performance metrics will be added after final training.
 
----
-*This README reflects the actual state of the project as of the latest implementation.*
