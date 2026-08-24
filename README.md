@@ -1,104 +1,61 @@
 # MotionShield
 
-## Privacy‑Preserving Human Activity Recognition Using Smartphone Sensor Fusion
+## Privacy-Preserving Human Activity Recognition Using Smartphone Sensors
 
-### Overview
-MotionShield is an end‑to‑end system for recognizing human activities from smartphone motion sensors. It includes a data pipeline, a Bi‑LSTM with temporal‑attention model, and utilities for training, evaluation, and on‑device inference.
+MotionShield is a Human Activity Recognition (HAR) project that uses
+smartphone accelerometer and gyroscope data to recognize human activities.
 
-### Project Structure
-```
-.
-├── backend/            # FastAPI inference service
-├── ml/                 # Core ML pipeline and model definitions
-├── data/               # Raw (downloaded) and processed dataset files
-├── scripts/            # CLI utilities: download, prepare, train, evaluate, smoke test
-├── configs/            # YAML configurations for datasets, models, experiments
-├── docs/               # Documentation, model cards
-├── tests/              # Unit and integration tests
-├── notebooks/          # Exploratory Jupyter notebooks
-├── .gitignore
-├── requirements.txt
-├── environment.yml
-└── README.md
-```
+The current implementation uses the UCI-HAR dataset and a Bi-LSTM with
+Temporal Attention for activity classification. The project includes the
+data preparation, validation, training and evaluation pipeline.
 
-### Current Implementation Status
-| Component                              | Status |
-|---------------------------------------|--------|
-| Dataset integration (UCI‑HAR)         | Completed |
-| UCI‑HAR validation                    | Completed |
-| Subject‑level train/val/test split    | Completed |
-| Leakage checks (no subject overlap)  | Completed |
-| Sensor window preparation (128‑step) | Completed |
-| Bi‑LSTM + Temporal‑Attention model   | Completed |
-| Model smoke test                      | Passed |
-| Sanity training (2‑epoch)             | Completed |
-| Final model training                  | Pending |
-| Final test evaluation                 | Pending |
-| Real‑time smartphone inference         | Planned |
-| FastAPI inference service             | Implemented |
-| Web application (React)               | Planned |
+---
 
-### Dataset Details (UCI‑HAR)
-- **Subjects:** 30
-- **Total windows:** 10,299
-- **Activities (6):** WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING
-- **Sensor channels (6):** `acc_x`, `acc_y`, `acc_z`, `gyro_x`, `gyro_y`, `gyro_z`
-- **Sampling rate:** 50 Hz (native)
-- **Window length:** 128 time steps
-- **No NaN / Inf values**
-- **Zero subject overlap** between splits
+## Aim
 
-### Data Pipeline
-1. **Download** raw data (`data/raw/`).
-2. **Adapter** discovers dataset files and converts them to a canonical sensor schema.
-3. **Validation** checks for missing values and correct channel order.
-4. **Cleaning** removes corrupt records.
-5. **Sampling‑rate handling** preserves the native rate.
-6. **Windowing** creates fixed‑length windows (128 steps).
-7. **Normalization** fitted on training data only.
-8. **Subject IDs** are retained for split generation.
-9. **NPZ output** stored under `data/processed/<dataset>/`.
+The aim of MotionShield is to build a reliable smartphone-based activity
+recognition system using motion sensor data.
 
-### Model Architecture
-- **Bi‑LSTM** encoder with two layers per direction.
-- **Temporal Attention** mechanism to focus on informative timesteps.
-- **Input shape:** `[N, 128, 6]` (samples, time steps, channels).
-- **Output:** 6 activity classes (0‑based indices).
+The project focuses on:
 
-### Training & Evaluation
-- `scripts/train.py` saves checkpoints, scaler, config, label mapping, and a JSON training history.
-- `scripts/evaluate.py` loads the best checkpoint, the train‑fitted scaler, and computes metrics (accuracy, balanced accuracy, precision, recall, macro/weighted F1, per‑class scores) along with visual reports.
+- Combining accelerometer and gyroscope data
+- Processing sensor data in fixed time windows
+- Keeping subjects separate during training and testing
+- Avoiding data leakage
+- Using a Bi-LSTM with Temporal Attention for activity classification
+- Preparing the model for future smartphone-based inference
 
-### Setup Instructions
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Jahnavi-Mogarala/Human-Activity-Recognition.git
-   cd Human-Activity-Recognition
-   ```
-2. **Create the Python environment**
-   ```bash
-   python -m venv .venv
-   .venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-3. **Download the UCI‑HAR dataset**
-   ```bash
-   python scripts/download_datasets.py --dataset UCI-HAR
-   ```
-4. **Prepare the dataset**
-   ```bash
-   python scripts/prepare_dataset.py --dataset UCI-HAR
-   ```
-5. **Run a quick sanity training** (2 epochs)
-   ```bash
-   python scripts/train.py --config configs/experiments/dev_sanity.yaml --output_dir models/experiments/dev_smoke
-   ```
-6. **Evaluate the trained model** (once final training is completed)
-   ```bash
-   python scripts/evaluate.py
-   ```
+---
 
-- Large binary artifacts (e.g., `.npz` files, model checkpoints) are excluded from version control via `.gitignore`.
-- Current results are limited to the sanity run; full model performance metrics will be added after final training.
+## Dataset
 
+The current implementation uses the **UCI Human Activity Recognition Using
+Smartphones** dataset.
+
+| Property | Details |
+|---|---|
+| Subjects | 30 |
+| Activities | 6 |
+| Sensor channels | 6 |
+| Sampling rate | 50 Hz |
+| Window size | 128 samples |
+| Total windows | 10,299 |
+
+### Activities
+
+- WALKING
+- WALKING_UPSTAIRS
+- WALKING_DOWNSTAIRS
+- SITTING
+- STANDING
+- LAYING
+
+### Sensor Channels
+
+```text
+acc_x
+acc_y
+acc_z
+gyro_x
+gyro_y
+gyro_z
