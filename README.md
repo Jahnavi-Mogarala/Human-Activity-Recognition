@@ -59,8 +59,10 @@ acc_z
 gyro_x
 gyro_y
 gyro_z
+```
 
 
-BLOCK DIAGRAM
-<img width="1188" height="792" alt="image" src="https://github.com/user-attachments/assets/2854b7b8-2769-40f4-89f9-e90ffdac4b97" />
+### BLOCK DIAGRAM
+
+<img width="1188" height="792" alt="BLOCK  DIAGRAM" src="https://github.com/user-attachments/assets/0134db92-08fe-4d9a-818d-28450806d79a" />
 
