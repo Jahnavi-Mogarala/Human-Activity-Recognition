@@ -1,0 +1,13 @@
+# Project dependencies
+numpy
+scipy
+pandas
+torch
+torchvision
+torchmetrics
+scikit-learn
+matplotlib
+seaborn
+pyyaml
+joblib
+tqdm

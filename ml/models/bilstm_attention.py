@@ -35,3 +35,6 @@ class BilstmAttentionModel(nn.Module):
         context = self.dropout(context)
         logits = self.classifier(context)
         return logits
+
+# Alias for compatibility with export script
+BiLSTMAttention = BilstmAttentionModel

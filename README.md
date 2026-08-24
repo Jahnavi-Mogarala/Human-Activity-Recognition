@@ -3,16 +3,16 @@
 ## Privacy‑Preserving Human Activity Recognition Using Smartphone Sensor Fusion
 
 ### Overview
-MotionShield is an end‑to‑end system for recognizing human activities from smartphone motion sensors. It includes a data pipeline, a Bi‑LSTM with temporal‑attention model, and utilities for training, evaluation, and on‑device inference.
+MotionShield is a complete system for recognizing human activities from a phone’s motion sensors. It includes a data pipeline, a bi‑directional LSTM network with an attention mechanism, and utilities for training, evaluation, and running predictions directly on the device.
 
-### Project Structure
+### Project Layout
 ```
 .
-├── backend/            # FastAPI inference service
-├── ml/                 # Core ML pipeline and model definitions
-├── data/               # Raw (downloaded) and processed dataset files
-├── scripts/            # CLI utilities: download, prepare, train, evaluate, smoke test
-├── configs/            # YAML configurations for datasets, models, experiments
+├── backend/            # FastAPI service for remote predictions
+├── ml/                 # Core code for the prediction algorithm
+├── data/               # Raw (downloaded) and processed data files
+├── scripts/            # Command‑line tools: download, prepare, train, evaluate, quick test
+├── configs/            # Configuration files for data and training runs
 ├── docs/               # Documentation, model cards
 ├── tests/              # Unit and integration tests
 ├── notebooks/          # Exploratory Jupyter notebooks
@@ -22,7 +22,7 @@ MotionShield is an end‑to‑end system for recognizing human activities from s
 └── README.md
 ```
 
-### Current Implementation Status
+### Current Progress
 | Component                              | Status |
 |---------------------------------------|--------|
 | Dataset integration (UCI‑HAR)         | Completed |
@@ -30,79 +30,79 @@ MotionShield is an end‑to‑end system for recognizing human activities from s
 | Subject‑level train/val/test split    | Completed |
 | Leakage checks (no subject overlap)  | Completed |
 | Sensor window preparation (128‑step) | Completed |
-| Bi‑LSTM + Temporal‑Attention model   | Completed |
-| Model smoke test                      | Passed |
-| Sanity training (2‑epoch)             | Completed |
-| Final model training                  | Pending |
-| Final test evaluation                 | Pending |
-| Real‑time smartphone inference         | Planned |
-| FastAPI inference service             | Implemented |
-| Web application (React)               | Planned |
+| Bi‑LSTM + Attention algorithm         | Completed |
+| Basic functionality test               | Passed |
+| Quick sanity training (2‑epoch)       | Completed |
+| Full training run                     | Pending |
+| Final evaluation on test set           | Pending |
+| Real‑time inference on the phone       | Planned |
+| FastAPI remote service                 | Implemented |
+| Web front‑end (React)                  | Planned |
 
-### Dataset Details (UCI‑HAR)
+### Dataset Information (UCI‑HAR)
 - **Subjects:** 30
 - **Total windows:** 10,299
 - **Activities (6):** WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING
 - **Sensor channels (6):** `acc_x`, `acc_y`, `acc_z`, `gyro_x`, `gyro_y`, `gyro_z`
 - **Sampling rate:** 50 Hz (native)
 - **Window length:** 128 time steps
-- **No NaN / Inf values**
-- **Zero subject overlap** between splits
+- **No missing or infinite values**
+- **No overlap of subjects between training, validation and test sets**
 
-### Data Pipeline
-1. **Download** raw data (`data/raw/`).
-2. **Adapter** discovers dataset files and converts them to a canonical sensor schema.
+### Data Processing Steps
+1. **Download** the raw files into `data/raw/`.
+2. **Adapter** discovers the files and converts them to a common sensor format.
 3. **Validation** checks for missing values and correct channel order.
-4. **Cleaning** removes corrupt records.
-5. **Sampling‑rate handling** preserves the native rate.
-6. **Windowing** creates fixed‑length windows (128 steps).
-7. **Normalization** fitted on training data only.
-8. **Subject IDs** are retained for split generation.
-9. **NPZ output** stored under `data/processed/<dataset>/`.
+4. **Cleaning** removes any corrupted records.
+5. **Sampling‑rate handling** keeps the original 50 Hz rate.
+6. **Windowing** creates fixed‑length windows of 128 samples.
+7. **Normalization** is computed on the training data only.
+8. **Subject IDs** are kept so we can split the data without mixing subjects.
+9. **NPZ files** are written to `data/processed/<dataset>/`.
 
-### Model Architecture
-- **Bi‑LSTM** encoder with two layers per direction.
-- **Temporal Attention** mechanism to focus on informative timesteps.
-- **Input shape:** `[N, 128, 6]` (samples, time steps, channels).
-- **Output:** 6 activity classes (0‑based indices).
+### Prediction Algorithm
+- A bi‑directional LSTM with two layers per direction processes each 128‑step window.
+- An attention mechanism highlights the most informative time steps before the final classification layer.
+- Input shape: `[batch, 128, 6]` (samples, time steps, sensor channels).
+- Output: one of six activity labels.
 
 ### Training & Evaluation
-- `scripts/train.py` saves checkpoints, scaler, config, label mapping, and a JSON training history.
-- `scripts/evaluate.py` loads the best checkpoint, the train‑fitted scaler, and computes metrics (accuracy, balanced accuracy, precision, recall, macro/weighted F1, per‑class scores) along with visual reports.
+- `scripts/train.py` reads the prepared data, runs the training loop, and stores the best checkpoint, the normalisation parameters, and a small JSON log of the training progress.
+- `scripts/evaluate.py` loads the saved checkpoint and normalisation data, runs the model on a held‑out test set, and reports metrics such as accuracy, precision, recall and F1 scores, together with optional visual reports.
 
-### Setup Instructions
+### Getting Started
 1. **Clone the repository**
-   ```bash
+   ```
    git clone https://github.com/Jahnavi-Mogarala/Human-Activity-Recognition.git
    cd Human-Activity-Recognition
    ```
 2. **Create the Python environment**
-   ```bash
+   ```
    python -m venv .venv
    .venv\Scripts\activate
    pip install -r requirements.txt
    ```
-3. **Download the UCI‑HAR dataset**
-   ```bash
+3. **Download the UCI‑HAR data**
+   ```
    python scripts/download_datasets.py --dataset UCI-HAR
    ```
-4. **Prepare the dataset**
-   ```bash
+4. **Prepare the data**
+   ```
    python scripts/prepare_dataset.py --dataset UCI-HAR
    ```
-5. **Run a quick sanity training** (2 epochs)
-   ```bash
+5. **Run a quick sanity training (2 epochs)**
+   ```
    python scripts/train.py --config configs/experiments/dev_sanity.yaml --output_dir models/experiments/dev_smoke
    ```
-6. **Evaluate the trained model** (once final training is completed)
-   ```bash
+6. **Evaluate the model** (after a full training run)
+   ```
    python scripts/evaluate.py
    ```
 
 ### Notes
-- The repository does **not** contain raw dataset files; they are downloaded via the provided script.
-- Large binary artifacts (e.g., `.npz` files, model checkpoints) are excluded from version control via `.gitignore`.
-- Current results are limited to the sanity run; full model performance metrics will be added after final training.
+- The raw dataset files are not stored in the repository; they are downloaded automatically by the script above.
+- Large binary files (e.g., processed NPZ files, checkpoint files) are listed in `.gitignore` and are therefore not tracked by Git.
+- At the moment only the quick sanity run has been completed; full training and a complete evaluation will be added later.
 
 ---
-*This README reflects the actual state of the project as of the latest implementation.*
+*This README reflects the current state of the project.*

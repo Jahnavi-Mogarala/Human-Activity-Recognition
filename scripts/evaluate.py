@@ -12,6 +12,8 @@ re‑creates the exact model architecture, runs inference, computes a full set o
 metrics, generates plots and JSON reports, and prints a concise summary.
 """
 
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import argparse
 import json
 import yaml
@@ -125,10 +127,14 @@ def plot_training_curves(history_path: Path, out_path: Path):
 
 
 def plot_per_class_metrics(report: dict, out_path: Path):
+    # Safely handle cases where the classification report does not contain class‑wise data.
+    if "by_class" not in report:
+        print("[WARN] Classification report missing 'by_class' - skipping per-class metric plot.")
+        return
     classes = list(report["by_class"].keys())
-    precision = [report["by_class"][c]["precision"] for c in classes]
-    recall = [report["by_class"][c]["recall"] for c in classes]
-    f1 = [report["by_class"][c]["f1-score"] for c in classes]
+    precision = [report["by_class"][c].get("precision", 0.0) for c in classes]
+    recall = [report["by_class"][c].get("recall", 0.0) for c in classes]
+    f1 = [report["by_class"][c].get("f1-score", 0.0) for c in classes]
     x = np.arange(len(classes))
     width = 0.25
     plt.figure(figsize=(10, 6))
