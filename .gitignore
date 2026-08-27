@@ -16,19 +16,62 @@ __pycache__/
 # Node / frontend
 node_modules/
 /frontend/dist/
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.dist-info/
+.pytest_cache/
+.mypy_cache/
+.coverage
+.tox/
+.env
+.venv/
+# Jupyter
+.ipynb_checkpoints/
+# Node / frontend
+node_modules/
+/frontend/dist/
 # Data
 data/raw/
 data/processed/
 data/interim/
 *.csv.gz
 *.npz
-# Model artifacts (store via Git LFS)
-*.pth
-*.pkl
-*.pt
+# Model artifacts (tracked via Git LFS)
+# Do NOT ignore *.pth, *.pt, *.pkl – they are tracked via LFS
+
 # Exclude logs and experiment artifacts
 logs/
 models/experiments/
-models/*.pth
-models/*.pkl
-models/*.pt
+
+# Android build artefacts
+frontend/android/app/build/
+frontend/android/.gradle/
+frontend/android/.cxx/
+frontend/android/gradle-7.6/
+frontend/android/gradle_extracted/
+frontend/android/gradle-7.6-bin.zip
+frontend/android/gradle_temp*.zip
+frontend/android/java_pid*.hprof
+frontend/android/local.properties
+
+# Logs and temporary files
+logs/
+
+# Virtual environments
+har-torch-py311/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.log
+*.tmp
+har-torch-py311/
+venv/
+
+# Pycache and compiled files
+__pycache__/
+*.pyc

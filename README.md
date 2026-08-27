@@ -1,5 +1,57 @@
 # MotionShield
 
+## Overview
+MotionShield is a privacy‑preserving Human Activity Recognition (HAR) system that uses smartphone accelerometer and gyroscope data. It employs a Bi‑LSTM with Temporal Attention to classify six activities.
+
+## Verified Results
+| Metric | Value |
+|--------|-------|
+| Test Accuracy | **80.19%** |
+| Macro F1 | **80.94%** |
+| Number of Classes | **6** |
+| Test Samples | **3,437** |
+| Model Parameters | **552,582** |
+| Checkpoint | `bilstm_attention.pt` |
+
+*All numbers are from the official evaluation (no fabrication).*
+
+## Repository Layout
+- `backend/` – FastAPI service for remote inference.
+- `frontend/android/` – Android app for on‑device inference (APK built at `frontend/android/app/build/outputs/apk/debug/app-debug.apk`).
+- `frontend/react/` – (Planned) React front‑end.
+- `ml/` – Model definition (`ml/models/bilstm_attention.py`) and pipeline utilities.
+- `scripts/` – Data download, preparation, training, evaluation, and validation scripts.
+- `reports/` – Experiment reports, confusion matrix, performance, quantisation, and audit.
+- `tests/` – Pytest suite (8 / 8 passed).
+
+## Installation
+```bash
+git clone https://github.com/Jahnavi-Mogarala/Human-Activity-Recognition.git
+cd Human-Activity-Recognition
+python -m venv .venv
+.venv\\Scripts\\activate
+pip install -r requirements.txt
+```
+
+## Data Preparation
+```bash
+python scripts/download_datasets.py --dataset UCI-HAR
+python scripts/prepare_dataset.py --dataset UCI-HAR
+```
+
+## Evaluation
+```bash
+har-torch-py311\\Scripts\\python.exe -m pytest -q   # confirm test suite passes
+python scripts/evaluate.py                     # prints accuracy, macro F1, etc.
+```
+
+## Android Inference
+The Android app loads the TorchScript model (`bilstm_attention.pt`) and scaler (`scaler.pkl`) from `frontend/android/app/src/main/assets/`. It processes a 128‑step window of the six sensor channels and outputs the predicted activity.
+
+## License
+This project is licensed under the MIT License.
+
+
 ## Privacy-Preserving Human Activity Recognition Using Smartphone Sensors
 
 MotionShield is a Human Activity Recognition (HAR) project that uses
