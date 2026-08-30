@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/background_color">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_card_background"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/aboutTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MotionShield"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/color_primary" />
+
+        <TextView
+            android:id="@+id/aboutSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bi‑LSTM + Temporal Attention Human Activity Recognition"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/aboutInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="\u2022 Input: 128 × 6 (Accelerometer XYZ + Gyroscope XYZ)\n\u2022 Sensors: Accelerometer &amp; Gyroscope (SENSOR_DELAY_GAME)\n\u2022 Classes (with colors): WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING\n\u2022 Model: TorchScript Bi‑LSTM + Temporal Attention (on‑device inference)"
+            android:layout_marginTop="12dp" />
+    </LinearLayout>
+</ScrollView>

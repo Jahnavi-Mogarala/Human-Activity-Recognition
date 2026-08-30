@@ -39,8 +39,8 @@ def main():
             else:
                 # Install APK
                 install_out, install_err, install_code = run_cmd(f'"{adb_path}" -s {device} install -r "{apk_path}"')
-                # Launch main activity (package name assumed from manifest; adjust if needed)
-                launch_cmd = f'"{adb_path}" -s {device} shell am start -n com.example.humanactivity/.MainActivity'
+                # Launch main activity (package name from manifest)
+                launch_cmd = f'"{adb_path}" -s {device} shell am start -n com.example.app/.MainActivity'
                 launch_out, launch_err, launch_code = run_cmd(launch_cmd)
                 # Capture logcat for recent logs
                 log_out, log_err, log_code = run_cmd(f'"{adb_path}" -s {device} logcat -d')

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    tools:context=".LiveFragment">
+
+    <!-- Current Activity Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/currentActivityCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="@color/card_color"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/border_color">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/currentActivityImage"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_motionshield_logo"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/currentActivityName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Running"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@color/text_primary"
+                app:layout_constraintStart_toEndOf="@id/currentActivityImage"
+                app:layout_constraintTop_toTopOf="@id/currentActivityImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="12dp" />
+
+            <TextView
+                android:id="@+id/currentConfidence"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Confidence: 92%"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@color/text_secondary"
+                app:layout_constraintStart_toStartOf="@id/currentActivityName"
+                app:layout_constraintTop_toBottomOf="@id/currentActivityName"
+                app:layout_constraintEnd_toEndOf="@id/currentActivityName"
+                android:layout_marginTop="4dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Confidence Bars -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/confidenceBarList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/currentActivityCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/sensorStatusCard"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Sensor Status Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/sensorStatusCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="@color/card_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/border_color">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/sensorStatusTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sensor Status"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textColor="@color/text_primary"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/accelerometerStatus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Accelerometer: OK (128/128)"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textColor="@color/text_secondary"
+                app:layout_constraintTop_toBottomOf="@id/sensorStatusTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/gyroscopeStatus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Gyroscope: OK (128/128)"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textColor="@color/text_secondary"
+                app:layout_constraintTop_toBottomOf="@id/accelerometerStatus"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="2dp" />
+
+            <TextView
+                android:id="@+id/performanceMetrics"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Latency: 12ms • 30 predictions/sec • Rate: 100Hz"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textColor="@color/text_secondary"
+                app:layout_constraintTop_toBottomOf="@id/gyroscopeStatus"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp" />
+
+            <LinearLayout
+                android:id="@+id/controlButtons"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/performanceMetrics"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="12dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/startButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="START" />
+
+                <Button
+                    android:id="@+id/pauseButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PAUSE"
+                    android:layout_marginStart="8dp" />
+
+                <Button
+                    android:id="@+id/resetButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RESET"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
