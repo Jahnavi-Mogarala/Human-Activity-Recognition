@@ -218,7 +218,9 @@ def main():
     test_npz_path = Path(cfg.get('test_path'))
     if not test_npz_path.is_file():
         raise FileNotFoundError(f"Test NPZ not found: {test_npz_path}")
-    test_windows, test_labels = load_test_data(test_npz_path)
+    test_windows, raw_test_labels = load_test_data(test_npz_path)
+    # Convert to 0‑based class indices (training uses 0‑based)
+    test_labels = (raw_test_labels - 1).astype(np.int64)
 
     # Load metadata for verification
     metadata_path = model_dir / "model_metadata.json"

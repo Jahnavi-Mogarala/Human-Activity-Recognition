@@ -1,13 +1,13 @@
 {
   "overall": {
-    "accuracy": 0.08379400640093104,
-    "balanced_accuracy": 0.08147023592472309,
-    "macro_precision": 0.06740197540995309,
-    "macro_recall": 0.0698316307926198,
-    "macro_f1": 0.0685604553936209,
-    "weighted_precision": 0.0808302681824063,
-    "weighted_recall": 0.08379400640093104,
-    "weighted_f1": 0.08224696021588007
+    "accuracy": 0.8018620890311318,
+    "balanced_accuracy": 0.8101083007165993,
+    "macro_precision": 0.8128068436801769,
+    "macro_recall": 0.8101083007165993,
+    "macro_f1": 0.8094092605181707,
+    "weighted_precision": 0.8064273821471499,
+    "weighted_recall": 0.8018620890311318,
+    "weighted_f1": 0.802189134779166
   },
   "per_class": {},
   "model_statistics": {
@@ -15,11 +15,11 @@
     "trainable_parameters": 552582,
     "checkpoint_size_bytes": 6656375,
     "device": "cpu",
-    "average_batch_latency_sec": 0.12807281576556923,
-    "mean_latency_sec": 0.12807281576556923,
-    "median_latency_sec": 0.11825899724607114,
-    "std_latency_sec": 0.04018167353855717,
-    "total_inference_time_sec": 207.47796154022217,
+    "average_batch_latency_sec": 0.2550321762944445,
+    "mean_latency_sec": 0.2550321762944445,
+    "median_latency_sec": 0.3025949133767022,
+    "std_latency_sec": 0.07974515633786566,
+    "total_inference_time_sec": 413.1521255970001,
     "batch_size": 64
   }
 }
