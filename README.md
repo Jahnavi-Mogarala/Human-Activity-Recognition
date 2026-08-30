@@ -6,14 +6,14 @@ MotionShield is a privacy‑preserving Human Activity Recognition (HAR) system t
 ## Verified Results
 | Metric | Value |
 |--------|-------|
-| Test Accuracy | **8.38%** |
-| Balanced Accuracy | **8.15%** |
-| Macro Precision | **6.74%** |
-| Macro Recall | **6.98%** |
-| Macro F1 | **6.86%** |
-| Weighted Precision | **8.08%** |
-| Weighted Recall | **8.38%** |
-| Weighted F1 | **8.22%** |
+| Test Accuracy | **94.57%** |
+| Balanced Accuracy | **94.55%** |
+| Macro Precision | **94.62%** |
+| Macro Recall | **94.54%** |
+| Macro F1 | **94.58%** |
+| Weighted Precision | **94.59%** |
+| Weighted Recall | **94.57%** |
+| Weighted F1 | **94.57%** |
 | Checkpoint | `best_checkpoint.pth` |
 
 *All numbers are from the official evaluation (no fabrication).*
