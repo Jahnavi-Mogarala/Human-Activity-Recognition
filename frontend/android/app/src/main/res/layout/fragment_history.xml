@@ -7,41 +7,31 @@
     android:background="@color/background_color"
     tools:context=".HistoryFragment">
 
-    <!-- History List -->
+    <!-- RecyclerView for session list -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/historyRecyclerView"
+        android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/startDetectionButton"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="16dp"
         android:clipToPadding="false" />
 
-    <!-- Empty State Text (visibility toggled in code) -->
+    <!-- Empty state text -->
     <TextView
-        android:id="@+id/emptyStateText"
+        android:id="@+id/emptyState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No activity history yet."
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:text="No sessions recorded yet."
+        android:textAppearance="?attr/textAppearanceBody1"
         android:textColor="@color/text_secondary"
+        android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/startDetectionButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone" />
-
-    <!-- START DETECTION Button -->
-    <Button
-        android:id="@+id/startDetectionButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="START DETECTION"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp" />
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
