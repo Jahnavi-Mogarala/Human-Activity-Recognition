@@ -15,11 +15,11 @@
     "trainable_parameters": 552582,
     "checkpoint_size_bytes": 6656375,
     "device": "cpu",
-    "average_batch_latency_sec": 0.2550321762944445,
-    "mean_latency_sec": 0.2550321762944445,
-    "median_latency_sec": 0.3025949133767022,
-    "std_latency_sec": 0.07974515633786566,
-    "total_inference_time_sec": 413.1521255970001,
+    "average_batch_latency_sec": 0.07017981652860289,
+    "mean_latency_sec": 0.07017981652860289,
+    "median_latency_sec": 0.06495048381664134,
+    "std_latency_sec": 0.018675367700964934,
+    "total_inference_time_sec": 113.69130277633667,
     "batch_size": 64
   }
 }
