@@ -8,6 +8,13 @@ Privacy-Preserving Smartphone Human Activity Recognition and Safety Monitoring S
 MotionShield is an end-to-end, privacy-preserving Human Activity Recognition (HAR) and safety monitoring application. It processes real-time smartphone accelerometer and gyroscope data using an on-device PyTorch model combining a Bidirectional LSTM (Bi-LSTM) with Temporal Attention, paired with an independent multi-stage fall detection safety subsystem.
 
 ---
+## ANDROID APP DEMO 
+
+
+[![Demo Video](<img width="387" height="812" alt="image" src="https://github.com/user-attachments/assets/4fe66d62-01a4-4940-b9c7-baeeea0e2dcb" />
+)](https://drive.google.com/file/d/1JZvviVcmxFAGQ7o4-roClT8AoN5CRq6Q/view?usp=sharing)
+
+> **Note:** Click on the image video will play. The video above demonstrates MotionShield App workflow in real-time.
 
 ## Problem Statement
 Traditional human activity recognition systems often rely on cloud-based processing, raising privacy concerns regarding continuous sensor streaming. Furthermore, static and dynamic activity classification requires low-latency, temporal context modeling that operates efficiently within mobile resource constraints.
