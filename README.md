@@ -11,8 +11,8 @@ MotionShield is an end-to-end, privacy-preserving Human Activity Recognition (HA
 ## ANDROID APP DEMO 
 
 
-[![Demo Video](<img width="387" height="812" alt="image" src="https://github.com/user-attachments/assets/4fe66d62-01a4-4940-b9c7-baeeea0e2dcb" />
-)](https://drive.google.com/file/d/1JZvviVcmxFAGQ7o4-roClT8AoN5CRq6Q/view?usp=sharing)
+[![Demo Video] (<img width="387" height="812" alt="image" src="https://github.com/user-attachments/assets/4fe66d62-01a4-4940-b9c7-baeeea0e2dcb" />
+)] (https://drive.google.com/file/d/1JZvviVcmxFAGQ7o4-roClT8AoN5CRq6Q/view?usp=sharing)
 
 > **Note:** Click on the image video will play. The video above demonstrates MotionShield App workflow in real-time.
 
