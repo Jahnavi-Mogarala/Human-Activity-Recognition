@@ -8,9 +8,11 @@ package com.example.app;
  */
 public class SensorBuffer {
     private static final int WINDOW_SIZE = 128;
+    private static final int STRIDE = 25; // predict every 0.5 sec
     private static final int FEATURE_COUNT = 6;
     private final float[][] buffer = new float[WINDOW_SIZE][FEATURE_COUNT];
     private int index = 0;
+    private int samplesSinceLastWindow = 0;
 
     /**
      * Adds a new six‑feature sample to the buffer.
@@ -21,17 +23,33 @@ public class SensorBuffer {
         if (sample == null || sample.length != FEATURE_COUNT) {
             throw new IllegalArgumentException("Sample must have exactly 6 float values");
         }
-        if (isFull()) {
-            // ignore additional samples – caller should clear after inference
-            return;
+        
+        if (index < WINDOW_SIZE) {
+            System.arraycopy(sample, 0, buffer[index], 0, FEATURE_COUNT);
+            index++;
+            if (index == WINDOW_SIZE) {
+                samplesSinceLastWindow = STRIDE; // force isWindowReady true immediately on first fill
+            }
+        } else {
+            // Shift left by 1
+            for (int i = 0; i < WINDOW_SIZE - 1; i++) {
+                System.arraycopy(buffer[i+1], 0, buffer[i], 0, FEATURE_COUNT);
+            }
+            System.arraycopy(sample, 0, buffer[WINDOW_SIZE - 1], 0, FEATURE_COUNT);
+            samplesSinceLastWindow++;
         }
-        System.arraycopy(sample, 0, buffer[index], 0, FEATURE_COUNT);
-        index++;
     }
 
-    /** Returns true when 128 samples have been collected. */
+    public boolean isWindowReady() {
+        return index == WINDOW_SIZE && samplesSinceLastWindow >= STRIDE;
+    }
+
+    public void markWindowRead() {
+        samplesSinceLastWindow = 0;
+    }
+
     public boolean isFull() {
-        return index >= WINDOW_SIZE;
+        return index == WINDOW_SIZE;
     }
 
     /** Returns the window as a 2‑D array [128][6] in chronological order. */
@@ -47,10 +65,10 @@ public class SensorBuffer {
         return copy;
     }
 
-    // Reset buffer for a new window.
+    // Reset buffer for a new session.
     public void clear() {
-        // Reset index; existing data will be overwritten on next addSample.
         index = 0;
+        samplesSinceLastWindow = 0;
     }
 
     // Returns the number of samples currently stored (0‑128).

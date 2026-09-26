@@ -20,7 +20,7 @@ public class SessionRepository {
     private final MutableLiveData<List<SessionEntity>> allSessions = new MutableLiveData<>();
 
     public SessionRepository(Application application) {
-        AppDatabase db = com.example.app.MotionShieldApp.getDatabase();
+        AppDatabase db = AppDatabase.getInstance(application);
         this.sessionDao = db.sessionDao();
         // Load initial data
         loadAllSessions();

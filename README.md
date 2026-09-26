@@ -1,109 +1,109 @@
-# MotionShield
+# MotionShield — Privacy-Preserving Human Activity Recognition
 
-## Overview
-MotionShield is a privacy‑preserving Human Activity Recognition (HAR) system that uses smartphone accelerometer and gyroscope data. It employs a Bi‑LSTM with Temporal Attention to classify six activities.
+MotionShield is an end-to-end, privacy-preserving Human Activity Recognition (HAR) and safety monitoring application powered by smartphone motion sensors, a Bi-LSTM with Temporal Attention neural network, and an independent real-time fall detection safety engine.
 
-## Verified Results
-| Metric | Value |
-|--------|-------|
-| Test Accuracy | **94.57%** |
-| Balanced Accuracy | **94.55%** |
-| Macro Precision | **94.62%** |
-| Macro Recall | **94.54%** |
-| Macro F1 | **94.58%** |
-| Weighted Precision | **94.59%** |
-| Weighted Recall | **94.57%** |
-| Weighted F1 | **94.57%** |
-| Checkpoint | `best_checkpoint.pth` |
+---
 
-*All numbers are from the official evaluation (no fabrication).*
+## Architecture Overview
 
-## Repository Layout
-- `backend/` – FastAPI service for remote inference.
-- `frontend/android/` – Android app for on‑device inference (APK built at `frontend/android/app/build/outputs/apk/debug/app-debug.apk`).
-- `frontend/react/` – (Planned) React front‑end.
-- `ml/` – Model definition (`ml/models/bilstm_attention.py`) and pipeline utilities.
-- `scripts/` – Data download, preparation, training, evaluation, and validation scripts.
-- `reports/` – Experiment reports, confusion matrix, performance, quantisation, and audit.
-- `tests/` – Pytest suite (8 / 8 passed).
-
-## Installation
-```bash
-git clone https://github.com/Jahnavi-Mogarala/Human-Activity-Recognition.git
-cd Human-Activity-Recognition
-python -m venv .venv
-.venv\\Scripts\\activate
-pip install -r requirements.txt
-```
-
-## Data Preparation
-```bash
-python scripts/download_datasets.py --dataset UCI-HAR
-python scripts/prepare_dataset.py --dataset UCI-HAR
-```
-
-## Evaluation
-```bash
-har-torch-py311\\Scripts\\python.exe -m pytest -q   # confirm test suite passes
-python scripts/evaluate.py                     # prints accuracy, macro F1, etc.
-```
-
-## Android Inference
-The Android app loads the TorchScript model (`bilstm_attention.pt`) and scaler (`scaler.pkl`) from `frontend/android/app/src/main/assets/`. It processes a 128‑step window of the six sensor channels and outputs the predicted activity.
-
-## Aim
-The aim of MotionShield is to build a reliable smartphone-based activity recognition system using motion sensor data.
-
-The project focuses on:
-- Combining accelerometer and gyroscope data
-- Processing sensor data in fixed time windows
-- Keeping subjects separate during training and testing
-- Avoiding data leakage
-- Using a Bi-LSTM with Temporal Attention for activity classification
-- Preparing the model for future smartphone-based inference
-
-## Dataset (UCI-HAR)
-| Property | Details |
-|---|---|
-| Subjects | 30 |
-| Activities | 6 |
-| Sensor channels | 6 |
-| Sampling rate | 50 Hz |
-| Window size | 128 samples |
-| Total windows | 10,299 |
-
-### Activities
-- WALKING
-- WALKING_UPSTAIRS
-- WALKING_DOWNSTAIRS
-- SITTING
-- STANDING
-- LAYING
-
-### Sensor Channels
 ```text
-acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z
+                 Smartphone Sensors
+              ┌─────────────────────┐
+              │ Accelerometer       │
+              │ Gyroscope           │
+              └──────────┬──────────┘
+                         │
+              ┌──────────▼──────────┐
+              │ Sensor Buffer       │
+              │ 128 samples         │
+              │ 25-sample stride    │
+              └───────┬───────┬─────┘
+                      │       │
+             ┌────────▼───┐ ┌─▼──────────────┐
+             │ HAR Model  │ │ Fall Detection │
+             │ Bi-LSTM +  │ │ Safety Logic   │
+             │ Attention  │ │                │
+             └──────┬─────┘ └───────┬────────┘
+                    │               │
+             ┌──────▼──────┐   ┌────▼─────────┐
+             │ 6 Activities│   │ Fall Alert   │
+             │             │   │ + I'm OK     │
+             └─────────────┘   └──────────────┘
 ```
 
-### Block Diagram
-<img width="1188" height="792" alt="BLOCK  DIAGRAM" src="https://github.com/user-attachments/assets/0134db92-08fe-4d9a-818d-28450806d79a" />
+---
 
-## Current Progress
-| Component                              | Status |
-|---------------------------------------|--------|
-| Dataset integration (UCI‑HAR)         | Completed |
-| UCI‑HAR validation                    | Completed |
-| Subject‑level train/val/test split    | Completed |
-| Leakage checks (no subject overlap)  | Completed |
-| Sensor window preparation (128‑step) | Completed |
-| Bi‑LSTM + Attention algorithm         | Completed |
-| Basic functionality test               | Passed |
-| Quick sanity training (2‑epoch)       | Completed |
-| Full training run                     | Completed |
-| Final evaluation on test set           | Completed |
-| Real‑time inference on the phone       | In Progress |
-| FastAPI remote service                 | Implemented |
-| Web front‑end (React)                  | Planned |
+## Key Features
+
+- **On-Device Inference**: Runs PyTorch TorchScript model (`bilstm_attention.pt`) directly on the Android device for low-latency, privacy-preserving activity classification without external cloud requirements.
+- **Six Activity Classes**:
+  1. **Walking**
+  2. **Upstairs** (Walking Upstairs)
+  3. **Downstairs** (Walking Downstairs)
+  4. **Sitting**
+  5. **Standing**
+  6. **Laying**
+- **Independent Fall Detection Engine**: Sensor-driven multi-stage fall detection tracking free-fall acceleration drops, high-impact spikes ($>2.5g$), and post-impact inactivity. Includes a prominent alert card with an `I'M OK` recovery button.
+- **Continuous Sliding Window**: Generates predictions every 0.5 seconds using a 128-sample sliding window with a 25-sample stride at a 50 Hz target sampling rate.
+- **Elderly Safety & Precautions**: Built-in safety guidelines, fall prevention tips, stair safety rules, and phone placement instructions.
+- **Developer ML Diagnostics**: Live diagnostics screen displaying real-time 6-class probability vectors, raw PyTorch logits, inference latency, and window status.
+
+---
+
+## Model Performance (UCI-HAR Benchmark)
+
+| Metric | Value |
+|---|---|
+| **Test Accuracy** | **94.57%** |
+| **Balanced Accuracy** | **94.55%** |
+| **Macro Precision** | **94.62%** |
+| **Macro Recall** | **94.54%** |
+| **Macro F1** | **94.58%** |
+| **Weighted F1** | **94.57%** |
+
+---
+
+## Physical-Device Validation
+
+All six UCI-HAR activity classes were exercised on a physical Android device. Static activities such as Sitting and Laying produced stable predictions, while dynamic activities such as Walking, Upstairs, and Downstairs showed more variable probability distributions due to orientation variance and natural phone handling during testing. The application exposes real-time six-class probabilities through the developer diagnostics screen.
+
+---
+
+## Repository Structure
+
+- `frontend/android/` – Native Android app featuring PyTorch Mobile, Material 3 design, Room session persistence, and Navigation Component.
+- `ml/` – PyTorch model architectures (`bilstm_attention.py`), loss functions, and data pipelines.
+- `backend/` – Optional FastAPI inference service for remote deployment.
+- `scripts/` – Data download, preprocessing, model training, quantization, and evaluation utilities.
+- `reports/` – Experiment reports, confusion matrices, and metrics.
+- `tests/` – Pytest suite for model and data pipelines.
+
+---
+
+## Getting Started
+
+### Android App Setup
+1. Open `frontend/android/` in Android Studio or build via Gradle command line:
+   ```bash
+   cd frontend/android
+   ./gradlew clean assembleDebug
+   ```
+2. Install the debug APK (`app-debug.apk`) onto an Android device running Android 7.0+ (API 24+).
+
+### Python ML Pipeline Setup
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+python scripts/evaluate.py
+```
+
+---
+
+## Disclaimer
+MotionShield is an activity-monitoring research prototype. Fall detection is an assistive sensor feature and is not a medical device or a substitute for professional emergency services.
+
+---
 
 ## License
 This project is licensed under the MIT License.

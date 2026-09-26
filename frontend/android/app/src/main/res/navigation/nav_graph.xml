@@ -35,4 +35,32 @@
         android:name="com.example.app.SessionSummaryFragment"
         android:label="Session Summary"
         tools:layout="@layout/fragment_session_summary" />
+
+    <fragment
+        android:id="@+id/activityGuideFragment"
+        android:name="com.example.app.ActivityGuideFragment"
+        android:label="Activity Guide" />
+
+    <fragment
+        android:id="@+id/insightsFragment"
+        android:name="com.example.app.InsightsFragment"
+        android:label="Insights" />
+
+    <fragment
+        android:id="@+id/historyDetailFragment"
+        android:name="com.example.app.HistoryDetailFragment"
+        android:label="History Detail" />
+
+    <fragment
+        android:id="@+id/activityDetailsFragment"
+        android:name="com.example.app.ActivityDetailsFragment"
+        android:label="Activity Detail" />
+    <fragment
+        android:id="@+id/elderlySafetyFragment"
+        android:name="com.example.app.ElderlySafetyFragment"
+        android:label="Elderly Safety" />
+    <fragment
+        android:id="@+id/mlDiagnosticsFragment"
+        android:name="com.example.app.MLDiagnosticsFragment"
+        android:label="ML Diagnostics" />
 </navigation>

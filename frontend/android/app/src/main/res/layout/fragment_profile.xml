@@ -1,96 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
-    tools:context=".ProfileFragment">
+    android:fillViewport="true"
+    android:paddingBottom="80dp">
 
-    <!-- Avatar and user info -->
-    <ImageView
-        android:id="@+id/profileAvatar"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:src="@drawable/ic_profile"
-        android:contentDescription="@string/avatar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="24dp" />
-
-    <TextView
-        android:id="@+id/profileName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="HAR User"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        android:textColor="@color/text_primary"
-        app:layout_constraintStart_toEndOf="@id/profileAvatar"
-        app:layout_constraintTop_toTopOf="@id/profileAvatar"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="12dp" />
-
-    <TextView
-        android:id="@+id/memberStatus"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="MotionShield Member"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        android:textColor="@color/text_secondary"
-        app:layout_constraintStart_toStartOf="@id/profileName"
-        app:layout_constraintTop_toBottomOf="@id/profileName"
-        app:layout_constraintEnd_toEndOf="@id/profileName"
-        android:layout_marginTop="4dp" />
-
-    <Button
-        android:id="@+id/editProfileButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="EDIT PROFILE"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        app:layout_constraintTop_toBottomOf="@id/profileAvatar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp" />
-
-    <!-- Options list -->
     <LinearLayout
-        android:id="@+id/optionsContainer"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/editProfileButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp">
+        android:padding="20dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/optionAccount"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profile &amp; Settings"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold" />
+
+        <!-- User Profile Card -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Account" />
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/surface_color"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/border_color"
+            android:layout_marginTop="16dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_profile" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MotionShield User"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        android:textColor="@color/text_primary"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Privacy-first activity monitoring"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/optionData"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+        <!-- Actions Menu Card -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Data" />
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/surface_color"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/border_color"
+            android:layout_marginTop="16dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/optionGeneral"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="General" />
+                <TextView
+                    android:id="@+id/btnNavGuide"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="📘  Activity Recognition Guide"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/text_primary"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:background="?attr/selectableItemBackground" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/optionAbout"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="About" />
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/border_color" />
+
+                <TextView
+                    android:id="@+id/btnNavSafety"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="🛡️  Elderly Safety &amp; Precautions"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/text_primary"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:background="?attr/selectableItemBackground" />
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/border_color" />
+
+                <TextView
+                    android:id="@+id/btnNavInsights"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="📊  Insights &amp; Analytics"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/text_primary"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:background="?attr/selectableItemBackground" />
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/border_color" />
+
+                <TextView
+                    android:id="@+id/btnNavAbout"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="ℹ️  About MotionShield &amp; Architecture"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/text_primary"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:background="?attr/selectableItemBackground" />
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/border_color" />
+
+                <TextView
+                    android:id="@+id/btnNavDiagnostics"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="🔧  ML Diagnostics (Developer)"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/text_secondary"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:background="?attr/selectableItemBackground" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
     </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

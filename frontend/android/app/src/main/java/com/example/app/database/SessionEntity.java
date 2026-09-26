@@ -22,4 +22,11 @@ public class SessionEntity {
         this.predictionCount = predictionCount;
         this.avgLatency = avgLatency;
     }
+    public long getId() { return id; }
+    public long getTimestamp() { return timestamp; }
+    public long getDurationMs() { return durationMs; }
+    public String getDominantActivity() { return dominantActivity; }
+    public float getAvgConfidence() { return avgConfidence; }
+    public int getPredictionCount() { return predictionCount; }
+    public float getAvgLatency() { return avgLatency; }
 }

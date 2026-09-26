@@ -16,21 +16,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="About MotionShield"
+            android:text="Session Detail"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
             android:textColor="@color/text_primary"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Privacy-preserving on-device Human Activity Recognition."
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            android:textColor="@color/text_secondary"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Card: Model Specs -->
+        <!-- Detail Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,57 +30,73 @@
             app:cardBackgroundColor="@color/surface_color"
             app:strokeWidth="1dp"
             app:strokeColor="@color/border_color"
-            android:layout_marginBottom="12dp">
+            android:layout_marginTop="16dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="20dp">
+
                 <TextView
+                    android:id="@+id/tvDetailActivity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Model &amp; Architecture"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:text="Walking"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="• Model: Bi-LSTM + Temporal Attention\n• Classes: 6 UCI-HAR activities\n• Sensor Channels: 6 (3 Accel + 3 Gyro)\n• Sampling Frequency: 50 Hz (20,000 µs)\n• Window Size: 128 samples per window\n• Preprocessing: Train-derived normalization"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginTop="8dp" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <!-- Card: Privacy -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/surface_color"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/border_color">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
                 <TextView
+                    android:id="@+id/tvDetailDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="On-Device Privacy"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:textColor="@color/colorSuccess"
-                    android:textStyle="bold" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="All sensor processing and model inference occur locally on your Android device. No raw motion data or activity telemetry is transmitted to external servers."
+                    android:text="Date: --"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                     android:textColor="@color/text_secondary"
+                    android:layout_marginTop="4dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/border_color"
+                    android:layout_marginVertical="16dp" />
+
+                <TextView
+                    android:id="@+id/tvDetailDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Duration: --"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:id="@+id/tvDetailConfidence"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Avg Confidence: --"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/text_primary"
                     android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:id="@+id/tvDetailPredictions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Predictions: --"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:id="@+id/tvDetailLatency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Avg Latency: --"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginTop="8dp" />
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

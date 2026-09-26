@@ -4,14 +4,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.app.database.SessionEntity;
-import com.example.app.R;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class SessionAdapter extends ListAdapter<SessionEntity, SessionAdapter.SessionViewHolder> {
 
@@ -23,7 +24,7 @@ public class SessionAdapter extends ListAdapter<SessionEntity, SessionAdapter.Se
             new DiffUtil.ItemCallback<SessionEntity>() {
                 @Override
                 public boolean areItemsTheSame(@NonNull SessionEntity oldItem, @NonNull SessionEntity newItem) {
-                    return oldItem.getId() == newItem.getId();
+                    return oldItem.id == newItem.id;
                 }
 
                 @Override
@@ -65,14 +66,25 @@ public class SessionAdapter extends ListAdapter<SessionEntity, SessionAdapter.Se
         }
 
         void bind(SessionEntity session) {
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String dateStr = sdf.format(new java.util.Date(session.getTimestamp()));
-            tvTimestamp.setText(dateStr);
-            tvDuration.setText("Duration: " + session.getDurationMs() + " ms");
-            tvDominantActivity.setText("Activity: " + session.getDominantActivity());
-            tvAvgConfidence.setText("Avg Confidence: " + String.format("%.2f", session.getAvgConfidence()));
-            tvPredictionCount.setText("Predictions: " + session.getPredictionCount());
-            tvAvgLatency.setText("Avg Latency: " + session.getAvgLatency() + " ns");
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy  HH:mm", Locale.getDefault());
+            String dateStr = sdf.format(new Date(session.getTimestamp()));
+            if (tvTimestamp != null) tvTimestamp.setText(dateStr);
+            if (tvDominantActivity != null) tvDominantActivity.setText(session.getDominantActivity());
+
+            long sec = session.getDurationMs() / 1000;
+            String durationStr = (sec >= 60) ? (sec / 60) + "m " + (sec % 60) + "s" : sec + "s";
+            if (tvDuration != null) tvDuration.setText("Duration: " + durationStr);
+
+            if (tvAvgConfidence != null) tvAvgConfidence.setText(String.format(Locale.getDefault(), "Confidence: %.1f%%", session.getAvgConfidence()));
+            if (tvPredictionCount != null) tvPredictionCount.setText("Predictions: " + session.getPredictionCount());
+            if (tvAvgLatency != null) tvAvgLatency.setText(String.format(Locale.getDefault(), "Latency: %.1f ms", session.getAvgLatency()));
+
+            itemView.setOnClickListener(v -> {
+                try {
+                    Navigation.findNavController(v).navigate(R.id.historyDetailFragment);
+                } catch (Exception ignored) {
+                }
+            });
         }
     }
 }

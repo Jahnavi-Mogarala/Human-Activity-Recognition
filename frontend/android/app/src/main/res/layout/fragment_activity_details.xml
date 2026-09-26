@@ -16,80 +16,79 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="About MotionShield"
+            android:text="Activity Detail"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
             android:textColor="@color/text_primary"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Privacy-preserving on-device Human Activity Recognition."
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            android:textColor="@color/text_secondary"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Card: Model Specs -->
+        <!-- Activity Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="20dp"
             app:cardElevation="2dp"
             app:cardBackgroundColor="@color/surface_color"
             app:strokeWidth="1dp"
             app:strokeColor="@color/border_color"
-            android:layout_marginBottom="12dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Model &amp; Architecture"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:textColor="@color/colorPrimary"
-                    android:textStyle="bold" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="• Model: Bi-LSTM + Temporal Attention\n• Classes: 6 UCI-HAR activities\n• Sensor Channels: 6 (3 Accel + 3 Gyro)\n• Sampling Frequency: 50 Hz (20,000 µs)\n• Window Size: 128 samples per window\n• Preprocessing: Train-derived normalization"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginTop="8dp" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+            android:layout_marginTop="16dp">
 
-        <!-- Card: Privacy -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/surface_color"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/border_color">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="24dp"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/ivDetailIllustration"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:src="@drawable/ic_walking"
+                    android:contentDescription="Activity Illustration" />
+
                 <TextView
+                    android:id="@+id/tvDetailTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="On-Device Privacy"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:textColor="@color/colorSuccess"
-                    android:textStyle="bold" />
+                    android:text="Walking"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginTop="12dp" />
+
+                <TextView
+                    android:id="@+id/tvDetailDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rhythmic, continuous forward motion detected via accelerometer and gyroscope cadence."
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    android:textColor="@color/text_secondary"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/border_color"
+                    android:layout_marginVertical="20dp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="All sensor processing and model inference occur locally on your Android device. No raw motion data or activity telemetry is transmitted to external servers."
+                    android:text="Recommended Device Placement"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDetailPlacement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="For best recognition accuracy, keep the smartphone positioned consistently in your hand or front trouser pocket during movement."
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                     android:textColor="@color/text_secondary"
-                    android:layout_marginTop="8dp" />
+                    android:layout_marginTop="4dp" />
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

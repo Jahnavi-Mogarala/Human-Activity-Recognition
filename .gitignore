@@ -65,13 +65,17 @@ logs/
 har-torch-py311/
 venv/
 .venv/
+.venv311/
 __pycache__/
 *.pyc
 *.log
 *.tmp
-har-torch-py311/
-venv/
-
-# Pycache and compiled files
-__pycache__/
-*.pyc
+prediction_debug.txt
+*.apk
+*.exe
+run_ui_check.bat
+scratch/
+ui_check/
+frontend/android/*.png
+frontend/android/*.xml
+frontend/android/*.txt
