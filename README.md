@@ -1,436 +1,421 @@
 # MotionShield
+### Privacy-Preserving Smartphone Human Activity Recognition & Safety Monitoring
 
-**Privacy-Preserving Smartphone Human Activity Recognition and Safety Monitoring System**
+**An Android-based deep learning system combining Bi-LSTM with Temporal Attention, real-time smartphone sensor processing, on-device inference, and independent safety-monitoring modules.**
 
-> A complete end-to-end Android application performing on-device AI inference for human activity recognition, fall detection, driver drowsiness monitoring, and wrist pulse estimation — with zero cloud dependency.
+<p align="center">
 
----
+**Deep Learning · Android · PyTorch · Sensor Fusion · Mobile Edge Computing**
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [System Architecture](#system-architecture)
-- [Machine Learning Model](#machine-learning-model)
-- [Sensor Processing Pipeline](#sensor-processing-pipeline)
-- [Activity Classes](#activity-classes)
-- [Fall Detection Engine](#fall-detection-engine)
-- [Driver Drowsiness Monitor](#driver-drowsiness-monitor)
-- [Wrist Pulse & BP Check](#wrist-pulse--bp-check)
-- [Multi-User System](#multi-user-system)
-- [Elderly Safety](#elderly-safety)
-- [Session & History Architecture](#session--history-architecture)
-- [Model Evaluation](#model-evaluation)
-- [Physical Device Validation](#physical-device-validation)
-- [Repository Structure](#repository-structure)
-- [Android Setup](#android-setup)
-- [ML Pipeline Setup](#ml-pipeline-setup)
-- [Privacy Design](#privacy-design)
-- [Disclaimer](#disclaimer)
+</p>
 
 ---
 
 ## Overview
 
-MotionShield is a production-grade, privacy-first Human Activity Recognition (HAR) and personal safety platform built entirely for Android. It combines a custom-trained **Bidirectional LSTM with Temporal Attention** neural network (exported to PyTorch TorchScript) with a suite of independent sensor-based safety subsystems — all executing locally on the user's smartphone with no cloud calls, no external data transmission, and no internet dependency during operation.
+MotionShield is an end-to-end Android application designed to recognize human activities and provide supplementary safety monitoring using smartphone motion sensors. It combines a custom-trained **Bidirectional Long Short-Term Memory (Bi-LSTM) network with Temporal Attention** and a collection of sensor-based safety modules in a single mobile application.
 
-The application was developed to demonstrate that modern deep learning inference, real-time signal processing, and multi-feature safety monitoring can be delivered entirely on consumer mobile hardware.
+The core activity recognition model processes accelerometer and gyroscope data to classify six everyday activities. The trained model is deployed on Android through a TorchScript model, allowing inference to run locally without continuously transmitting raw sensor data to a remote server.
 
----
+Beyond activity recognition, MotionShield includes an independent fall-detection engine, a driver-drowsiness monitoring prototype, experimental wrist-pulse estimation, local session history, activity analytics, and elderly safety guidance.
+
+The project brings together **deep learning, time-series processing, Android development, local data persistence, and mobile inference** in a practical application.
 
 ## Key Features
 
-| Feature | Description |
+| Feature | Implementation |
 |---|---|
-| **On-Device HAR Inference** | PyTorch TorchScript model runs via C++ JNI bindings. No sensor data ever leaves the device. |
-| **6-Class Activity Recognition** | Classifies Walking, Walking Upstairs, Walking Downstairs, Sitting, Standing, Laying in real time. |
-| **Independent Fall Detection** | Sensor-based 3-stage state machine (free-fall → impact → inactivity). Separate from ML model. |
-| **Driver Drowsiness Monitor** | Detects microsleep head-nod jerk patterns and erratic swerve via accelerometer and gyroscope. |
-| **Wrist BCG Pulse Estimation** | Ballistocardiographic heart rate estimation using accelerometer micro-vibrations at 50 Hz. |
-| **Multi-User Login** | 3-profile switcher with SharedPreferences persistence. No server authentication required. |
-| **Emergency Helpline** | One-tap dial (9440085239) accessible from Home, Profile, Live, Elderly Safety, and all safety screens. |
-| **Room Database Sessions** | Full session history: duration, dominant activity, confidence, latency, sample count. |
-| **ML Diagnostics Screen** | Real-time 6-class probability vector, raw logits, inference latency, window status. |
-| **Elderly Safety Guidance** | Evidence-based precautions for walking, stairs, footwear, phone placement, and rest. |
-| **Activity Guide & Instructions** | Step-by-step instructions for phone placement and activity testing built into the app. |
-
----
+| Human Activity Recognition | Bi-LSTM with Temporal Attention |
+| Activity Classification | Six UCI-HAR activity classes |
+| Sensor Acquisition | Accelerometer and gyroscope |
+| Real-Time Processing | 50 Hz target sampling with overlapping windows |
+| Model Deployment | PyTorch TorchScript on Android |
+| Prediction Confidence | Numerically stable softmax probabilities |
+| Fall Detection | Independent sensor-based state machine |
+| Driver Safety | Experimental drowsiness and motion-anomaly monitoring |
+| Wrist Vitals | Experimental accelerometer-based pulse estimation |
+| Session Persistence | Room database |
+| Activity History | Session records, details, and insights |
+| User Profiles | Local multi-profile switching |
+| ML Diagnostics | Class probabilities, logits, and inference latency |
+| Privacy | Local processing and device-local storage |
 
 ## System Architecture
 
-```
-                     Smartphone Sensors
-               ┌──────────────────────────┐
-               │  Accelerometer           │
-               │  Gyroscope               │
-               └────────────┬─────────────┘
-                            │
-               ┌────────────▼─────────────┐
-               │   Sensor Buffer          │
-               │   128 samples @ 50 Hz    │
-               │   25-sample stride       │
-               └──────────┬──────┬────────┘
-                          │      │
-              ┌───────────▼──┐ ┌─▼──────────────────┐
-              │  HAR Model   │ │  Safety Subsystems  │
-              │  Bi-LSTM +   │ │  ┌───────────────┐  │
-              │  Temporal    │ │  │ Fall Detection│  │
-              │  Attention   │ │  ├───────────────┤  │
-              └──────┬───────┘ │  │ Driver        │  │
-                     │         │  │ Drowsiness    │  │
-              ┌──────▼───────┐ │  ├───────────────┤  │
-              │ 6 Activities │ │  │ Wrist BCG     │  │
-              │ + Confidence │ │  │ Pulse Check   │  │
-              └──────┬───────┘ │  └───────────────┘  │
-                     │         └──────────┬────────────┘
-              ┌──────▼──────────────────┐ │
-              │   Room Database         │ │  Emergency
-              │   Session History       │ │  Helpline Alert
-              └─────────────────────────┘ │  (9440085239)
-                                          ▼
-                                    User Interface
+```mermaid
+flowchart TD
+    A[Smartphone Accelerometer and Gyroscope]
+    B[Sensor Acquisition at 50 Hz]
+    C[128-Sample Sliding Window]
+    D[Z-Score Preprocessing]
+    E[Bi-LSTM Network]
+    F[Temporal Attention]
+    G[Six-Class Classification]
+    H[Softmax Probabilities]
+    I[Android Live Monitoring]
+    J[Room Database]
+    K[History and Insights]
+    L[Independent Fall Detection]
+    M[Safety Alert]
+
+    A --> B --> C --> D --> E --> F --> G --> H --> I
+    I --> J --> K
+    C --> L --> M
 ```
 
----
+The activity recognition and fall-detection components operate as separate subsystems. The HAR model predicts one of six activities, while the safety engine independently evaluates motion patterns for potential fall events.
 
-## Android Application Flow
+### Processing Pipeline
 
-```
-MainActivity  (Bottom Navigation + Sensor Manager)
-├── HomeFragment
-│     Multi-user greeting, session summary, quick-action cards
-│     (Wrist Vitals, Driver Safety, Helpline, Activity Guide)
-│
-├── DashboardFragment  [Live]
-│     Real-time activity label, confidence bar, probability waveform
-│     Fall Alert card with I'M OK + Helpline buttons
-│     Session start/stop controls
-│
-├── HistoryFragment
-│     Completed session list (Room DB), swipe-to-delete, filter
-│     └── HistoryDetailFragment  (session breakdown)
-│
-└── ProfileFragment
-      User profile (Jahnavi / Multi-user switcher)
-      Emergency helpline card
-      Navigation hub →
-        ├── ActivityGuideFragment   (How to use MotionShield)
-        ├── ElderlySafetyFragment   (Safety precautions + helpline)
-        ├── InsightsFragment        (Analytics from Room storage)
-        ├── MLDiagnosticsFragment   (6-class probabilities, logits, latency)
-        ├── WristVitalCheckFragment (BCG pulse + BP estimation)
-        ├── DriverDrowsinessFragment(Microsleep & swerve detection)
-        └── AboutFragment           (Technical architecture specs)
-```
-
----
-
-## Sensor Processing Pipeline
-
-| Step | Detail |
-|---|---|
-| **Sensor Registration** | `TYPE_ACCELEROMETER` + `TYPE_GYROSCOPE` at 20,000 µs (50 Hz) |
-| **Gravity Scaling** | Divide by 9.80665 m/s² to match UCI-HAR training representation |
-| **Channel Order** | `[acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z]` — 6 channels per sample |
-| **Sliding Window** | 128-sample buffer (2.56 s), 25-sample stride (0.5 s update rate) |
-| **Z-Score Normalization** | Per-channel mean/std from UCI-HAR training split: `x_scaled = (x − μ) / σ` |
-| **Input Tensor** | Shape `[1, 128, 6]` passed to TorchScript model |
-| **Softmax Output** | Raw logits → numerically stable softmax → 6 probabilities summing to 1.0 |
-
----
+1. **Sensor acquisition:** Read three-axis accelerometer and gyroscope measurements.
+2. **Windowing:** Maintain a rolling buffer of 128 samples with a stride of 25 samples.
+3. **Preprocessing:** Arrange six sensor channels and apply training-derived normalization.
+4. **Inference:** Execute the trained Bi-LSTM and Temporal Attention model locally.
+5. **Classification:** Convert model logits into normalized class probabilities.
+6. **Application output:** Display activity predictions and confidence, monitor safety events, and persist completed sessions locally.
 
 ## Machine Learning Model
 
-**Architecture:** Bidirectional LSTM with Temporal Attention
+### Bi-LSTM with Temporal Attention
 
-```
-Input [1, 128, 6]
-    ↓
-Bi-LSTM  (hidden=128, 2 layers, dropout=0.3)
-    ↓  (concatenated bidirectional hidden states)
-Temporal Attention  (64-dim projection → softmax weights → weighted sum)
-    ↓
-Classification Head  (Linear → 6 classes)
-    ↓
-Softmax  →  Probability vector [6]
-```
+The model learns temporal patterns from sequential inertial sensor measurements. The bidirectional LSTM processes each observation window in forward and backward directions, capturing temporal relationships across the sequence. A temporal attention layer assigns learned weights to the resulting hidden states and combines them into a context representation for classification.
 
-| Parameter | Value |
+| Parameter | Configuration |
 |---|---|
 | Input shape | `[batch, 128, 6]` |
-| LSTM hidden size | 128 per direction (256 concatenated) |
-| LSTM layers | 2 |
+| Sensor channels | 3-axis acceleration + 3-axis gyroscope |
+| LSTM architecture | 2-layer bidirectional LSTM |
+| Hidden size | 128 per direction |
 | Attention dimension | 64 |
 | Dropout | 0.3 |
 | Output classes | 6 |
+| Loss function | Cross-entropy |
+| Optimizer | Adam |
+| Learning-rate scheduler | ReduceLROnPlateau |
 | Model format | PyTorch TorchScript (`.pt`) |
-| Runtime | PyTorch Mobile (Android JNI) |
 
----
+### Activity Classes
 
-## Activity Classes
+| Index | Activity |
+|:---:|---|
+| 0 | Walking |
+| 1 | Walking Upstairs |
+| 2 | Walking Downstairs |
+| 3 | Sitting |
+| 4 | Standing |
+| 5 | Laying |
 
-| Index | Label | Display Name |
-|:---:|:---|:---|
-| 0 | `WALKING` | Walking |
-| 1 | `WALKING_UPSTAIRS` | Walking Upstairs |
-| 2 | `WALKING_DOWNSTAIRS` | Walking Downstairs |
-| 3 | `SITTING` | Sitting |
-| 4 | `STANDING` | Standing |
-| 5 | `LAYING` | Laying |
+**Dataset:** [UCI Human Activity Recognition Using Smartphones](https://archive.ics.uci.edu/dataset/240/human+activity+recognition+using+smartphones)
 
-> Fall Detection is **not** a seventh ML class. It is a separate sensor-based safety subsystem.
+The dataset contains measurements from 30 volunteers performing six activities. The original benchmark uses smartphone accelerometer and gyroscope signals collected at 50 Hz.
 
----
+### Reported Benchmark Results
 
-## Fall Detection Engine
-
-Operates independently from the 6-class HAR model using its own sensor listener:
-
-```
-State Machine:
-NORMAL → IMPACT_CANDIDATE → INACTIVITY_CONFIRMATION → FALL_ALERT
-```
-
-| Stage | Trigger |
-|---|---|
-| Impact Detection | Acceleration magnitude > 2.5g |
-| Inactivity Confirmation | Variance < 0.15 sustained for 2 seconds post-impact |
-| Fall Alert UI | Full-screen warning card: "I'M OK" reset button + one-tap helpline call |
-
----
-
-## Driver Drowsiness Monitor
-
-A dedicated `DriverDrowsinessFragment` using the device accelerometer and gyroscope to detect in-vehicle microsleep events:
-
-| Signal | Detection |
-|---|---|
-| **Accelerometer** | Prolonged immobility (>8–12s, deviation <0.35g from 9.8g) followed by reactive jerk (>3.8g) = microsleep head-nod |
-| **Gyroscope** | Yaw rate >1.8 rad/s = erratic lane-swerve |
-
-- **CRITICAL ALARM** card with haptic wave pattern (400-200-400-200-600ms)
-- **I'M AWAKE** acknowledgment button + helpline dial
-- Safe driving guidelines and fatigue risk percentage displayed live
-- Sensors stop on `onPause()` — no background battery drain
-- Safe simulation test button for validation without actual driving risk
-
----
-
-## Wrist Pulse & BP Check
-
-`WristVitalCheckFragment` uses Ballistocardiography (BCG) — inertial sensing of cardiac-impulse micro-vibrations through the phone's accelerometer:
-
-**Algorithm:**
-```
-1. Register accelerometer at 50 Hz (20,000 µs)
-2. Compute magnitude: √(x² + y² + z²)
-3. High-pass filter: subtract running mean (α=0.97) to isolate BCG from gravity
-4. Adaptive peak threshold: 40% of signal RMS, updated per second
-5. Peak detection: slope reversal above threshold + 0.5s refractory window
-6. BPM = (peak_count / 15s) × 60, clamped to [45, 160]
-7. BP proxy: systolic ≈ 70 + 0.65×BPM, diastolic ≈ 40 + 0.50×BPM
-```
-
-- 15-second measurement window with countdown progress bar
-- Haptic heartbeat feedback every second during measurement
-- Dynamic status: Normal (green) / Bradycardia (blue) / Elevated (orange-red)
-- Fitness-grade estimation — not a medical device
-
----
-
-## Multi-User System
-
-`UserManager.java` provides a lightweight 3-profile switcher:
-
-| Profile | Role |
-|---|---|
-| **Jahnavi** (default) | Primary Account • Fitness & Health |
-| **Senior Care** | Caregiver Account • Elderly Monitoring |
-| **Guest User** | Guest Account • Temporary Access |
-
-- Active profile persisted via `SharedPreferences`
-- Switchable from Home screen avatar tap or Profile → Switch Profile button
-- Greeting and subtitle update instantly on profile switch
-- No database, no server, no authentication overhead
-
----
-
-## Elderly Safety
-
-Built-in safety guidance in `ElderlySafetyFragment`:
-
-- Clear walking paths and lighting recommendations
-- Stair navigation with handrail guidance
-- Footwear and phone placement advice
-- Rest and medical warning indicators
-- Emergency helpline (9440085239) prominent at top of screen
-
----
-
-## Session & History Architecture
-
-- **ViewModel**: `LiveMotionViewModel` — centralized state surviving Fragment recreation
-- **Room ORM**: `SessionEntity` table — stores timestamp, duration, dominant activity, average confidence, prediction count, average latency
-- **Single-write guarantee**: Prevents duplicate session records on termination
-- **History UI**: Sorted session list, swipe-to-delete, detail drill-down per session
-- **Home stats**: Live session count, total active time, top activity computed from Room data
-
----
-
-## Model Evaluation
-
-Evaluated on the official UCI-HAR held-out test split (subject-level separation, zero leakage):
+The following are the reported held-out UCI-HAR evaluation results for the trained model.
 
 | Metric | Score |
-|:---|:---:|
-| **Accuracy** | **94.57%** |
+|---|---:|
+| Accuracy | **94.57%** |
 | Balanced Accuracy | 94.55% |
 | Macro Precision | 94.62% |
 | Macro Recall | 94.54% |
-| Macro F1 | 94.58% |
-| Weighted F1 | 94.57% |
+| Macro F1-Score | **94.58%** |
+| Weighted F1-Score | 94.57% |
 
----
+These figures describe benchmark evaluation performance. Predictions on physical smartphones can differ because of phone placement, orientation, movement patterns, and differences between real-world sensor signals and the training data.
 
-## Physical Device Validation
+## Real-Time Sensor Processing
 
-Validated on a physical Android device (`ijhamrtgde49ij45`). All six UCI-HAR activity classes were exercised via the Live session screen and ML Diagnostics screen:
+MotionShield uses a rolling sensor buffer to generate overlapping input windows for inference.
 
-| Activity | Confidence Range | Stability |
-|---|---|---|
-| Sitting | ~90% | Stable |
-| Laying | ~61–85% | Stable |
-| Standing | ~75–88% | Generally stable, occasional Walking overlap |
-| Walking | ~55–80% | Variable — hand-held vs waist-mounted placement |
-| Walking Upstairs | ~50–65% | Variable — stride pattern dependent |
-| Walking Downstairs | ~50–70% | Variable — stride pattern dependent |
+| Processing parameter | Value |
+|---|---|
+| Target sampling rate | 50 Hz |
+| Window length | 128 samples |
+| Window duration | 2.56 seconds |
+| Window stride | 25 samples |
+| Nominal update interval | 0.5 seconds |
+| Input channels | 6 |
+| Normalization | Training-derived Z-score scaling |
 
-> Static activities (Sitting, Laying) produce consistently high-confidence predictions. Dynamic activities show more variable distributions due to hand-held phone orientation differences from the waist-mounted UCI-HAR benchmark collection protocol. Real-time probability vectors are observable live via the ML Diagnostics screen.
+The window duration represents the sensor history required for an inference. The nominal update interval represents how frequently a new prediction can be produced after the buffer is populated; it is not the same as the time required for the first prediction.
 
----
+The Android pipeline includes numerical softmax normalization so that the six class probabilities sum to approximately one. Prediction confidence is derived from the highest class probability.
+
+## Android Application
+
+MotionShield organizes its functionality into dedicated screens and components.
+
+| Screen or component | Purpose |
+|---|---|
+| Home | Overview, session summaries, and shortcuts |
+| Live Monitoring | Activity prediction, confidence, and session controls |
+| History | Saved sessions and activity records |
+| History Details | Individual session information |
+| Insights | Analytics derived from stored sessions |
+| Profile | Local user-profile management |
+| Activity Guide | Instructions for using the application |
+| Elderly Safety | Practical safety guidance |
+| ML Diagnostics | Probability vectors, logits, and inference information |
+| Driver Safety | Experimental drowsiness monitoring |
+| Wrist Vitals | Experimental pulse estimation |
+| About | Application architecture and technical information |
+
+### Session Management
+
+Session state is managed through `LiveMotionViewModel`, while completed sessions are persisted using Android Room.
+
+The application supports session start, pause, resume, stop-and-save, history retrieval, and session deletion. The database records session information such as duration, dominant activity, average confidence, prediction count, and inference latency.
+
+## Independent Fall Detection
+
+Fall detection is implemented separately from the six-class machine learning model. It uses a sensor-based state machine to assess motion patterns rather than introducing fall detection as an additional HAR class.
+
+```text
+NORMAL
+   ↓
+IMPACT CANDIDATE
+   ↓
+POST-IMPACT INACTIVITY CHECK
+   ↓
+POTENTIAL FALL ALERT
+   ↓
+USER ACKNOWLEDGMENT / RECOVERY
+```
+
+The documented prototype uses an acceleration threshold above approximately 2.5 g and a subsequent low-variance inactivity check over approximately two seconds. When the conditions are satisfied, the application presents an alert with an acknowledgment option.
+
+These thresholds are heuristic parameters, not proof that a fall has occurred. Real-world validation is required to assess false alarms and missed events. MotionShield is not a certified emergency-response or medical device.
+
+## Additional Safety Features
+
+### Driver Drowsiness Monitoring
+
+A separate Android screen explores motion-based detection of possible drowsiness-related head movements and unusual motion patterns. It includes warning and acknowledgment interfaces, haptic alerts, and a safe simulation option.
+
+This is an experimental sensor-based prototype, not a validated driver-monitoring system. Smartphone motion alone cannot reliably establish that a driver is asleep or that a vehicle is swerving.
+
+### Wrist Pulse Estimation
+
+The wrist-vitals module explores accelerometer-based ballistocardiographic (BCG) pulse estimation using signal filtering and peak detection.
+
+The application also displays an experimental blood-pressure estimate derived from a heuristic relationship with estimated pulse rate. **This estimate is not a validated blood-pressure measurement and must not be used for medical decisions.** Reliable pulse and blood-pressure assessment requires appropriate validated measurement equipment.
+
+### Elderly Safety
+
+The application provides guidance on safe walking, stair use, suitable footwear, clear walking paths, phone placement, rest, and emergency awareness. These features complement the monitoring interface but do not replace caregiver supervision or professional medical care.
+
+## Privacy and Data Handling
+
+Privacy is a central design objective of MotionShield.
+
+- The HAR model runs locally on the Android device.
+- Raw sensor data does not need to be uploaded to a cloud inference service.
+- Session history is stored in the device-local Room database.
+- User-profile selections are stored locally using SharedPreferences.
+- Core activity recognition is designed to operate without a network connection.
+
+The application’s privacy properties depend on its actual permissions, dependencies, and runtime behavior. Local inference alone does not establish a formal privacy certification.
+
+## Technology Stack
+
+| Layer | Technologies |
+|---|---|
+| Mobile Application | Android, Java, XML |
+| UI Architecture | Activities, Fragments, Jetpack Navigation |
+| Sensor Processing | Android SensorManager, accelerometer, gyroscope |
+| Machine Learning | Python, PyTorch |
+| Model Architecture | Bi-LSTM, Temporal Attention |
+| Model Deployment | TorchScript, Android JNI/C++ bindings |
+| Data Processing | NumPy, scikit-learn |
+| Local Persistence | Room, SQLite |
+| State Management | ViewModel, LiveData |
+| Experimentation | Dataset preparation, model training, evaluation scripts |
+| Testing | pytest, Android Gradle build |
 
 ## Repository Structure
 
-```
+```text
 Human-Activity-Recognition/
 ├── frontend/
 │   └── android/
 │       └── app/src/main/
-│           ├── assets/                   # bilstm_attention.pt, scaler_mean.json, scaler_std.json
+│           ├── assets/
+│           │   ├── bilstm_attention.pt
+│           │   ├── scaler_mean.json
+│           │   └── scaler_std.json
 │           ├── java/com/example/app/
-│           │   ├── LiveMotionViewModel.java     # Central HAR + fall detection state
-│           │   ├── SensorBuffer.java            # 128-sample sliding window
-│           │   ├── Preprocess.java              # Z-score normalization
-│           │   ├── InferencePhone.java          # PyTorch TorchScript JNI bridge
-│           │   ├── UserManager.java             # Multi-user profile management
-│           │   ├── HomeFragment.java            # Home dashboard
-│           │   ├── DashboardFragment.java       # Live activity monitor
-│           │   ├── ProfileFragment.java         # User profile + navigation hub
-│           │   ├── HistoryFragment.java         # Session history list
-│           │   ├── HistoryDetailFragment.java   # Session detail view
-│           │   ├── ActivityGuideFragment.java   # Instructions & phone placement
-│           │   ├── ElderlySafetyFragment.java   # Safety precautions
-│           │   ├── InsightsFragment.java        # Analytics
-│           │   ├── MLDiagnosticsFragment.java   # Real-time probability diagnostics
-│           │   ├── WristVitalCheckFragment.java # BCG pulse estimation
-│           │   ├── DriverDrowsinessFragment.java# Microsleep & swerve detection
-│           │   └── AboutFragment.java           # Technical specifications
+│           │   ├── LiveMotionViewModel.java
+│           │   ├── SensorBuffer.java
+│           │   ├── Preprocess.java
+│           │   ├── InferencePhone.java
+│           │   ├── UserManager.java
+│           │   ├── HomeFragment.java
+│           │   ├── DashboardFragment.java
+│           │   ├── HistoryFragment.java
+│           │   ├── HistoryDetailFragment.java
+│           │   ├── ProfileFragment.java
+│           │   ├── InsightsFragment.java
+│           │   ├── ElderlySafetyFragment.java
+│           │   ├── MLDiagnosticsFragment.java
+│           │   ├── DriverDrowsinessFragment.java
+│           │   └── WristVitalCheckFragment.java
 │           └── res/
-│               ├── layout/                      # Fragment XML layouts
-│               ├── navigation/nav_graph.xml     # Jetpack Navigation graph
-│               └── drawable/                   # Vector icons (walking, stairs, etc.)
+│               ├── layout/
+│               ├── drawable/
+│               └── navigation/
 ├── ml/
-│   └── models/                                 # Bi-LSTM + Attention PyTorch module
+│   └── models/
+├── data/
+│   └── adapters/
 ├── models/
-│   └── smartphone_har/                         # Trained checkpoints + metadata
-├── scripts/                                    # Training, preprocessing, evaluation
-├── reports/                                    # Experiment reports and metrics
-├── tests/                                      # pytest suite
-├── README.md
+│   └── smartphone_har/
+├── scripts/
+│   ├── prepare_dataset.py
+│   ├── train.py
+│   └── evaluate.py
+├── configs/
+├── reports/
+├── tests/
 ├── requirements.txt
+├── README.md
 └── .gitignore
 ```
 
----
+*The tree highlights the principal project components. Exact filenames and optional modules may vary with the current repository version.*
 
-## Android Setup
+## Getting Started
 
-**Requirements:** Android Studio Hedgehog+ or Gradle CLI, Android device/emulator API 24+ (Android 7.0+)
+### Prerequisites
+
+- Android Studio with a compatible Android SDK and Gradle installation
+- A physical Android device or compatible emulator
+- Python 3.11 recommended for the ML pipeline
+- Git
+
+### Clone the Repository
 
 ```bash
-# Build debug APK
-cd frontend/android
-./gradlew clean assembleDebug
+git clone https://github.com/Jahnavi-Mogarala/Human-Activity-Recognition.git
+cd Human-Activity-Recognition
+```
 
-# Install on connected device
+### Build the Android Application
+
+From the repository root:
+
+```bash
+cd frontend/android
+```
+
+On Windows:
+
+```powershell
+.\gradlew.bat clean assembleDebug
+```
+
+On macOS or Linux:
+
+```bash
+./gradlew clean assembleDebug
+```
+
+The debug APK is normally generated at:
+
+```text
+app/build/outputs/apk/debug/app-debug.apk
+```
+
+Install it on a connected device using:
+
+```bash
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-**Required permissions (auto-requested at runtime):**
-- `BODY_SENSORS` — accelerometer/gyroscope access
-- `HIGH_SAMPLING_RATE_SENSORS` — 50 Hz sensor registration
-- `VIBRATE` — haptic feedback for wrist check and drowsiness alarm
-- `CALL_PHONE` / `ACTION_DIAL` — emergency helpline dialing
+Use the full Android SDK platform-tools path if `adb` is not available on your system's `PATH`.
 
----
+### Set Up the ML Environment
 
-## ML Pipeline Setup
+From the repository root, create and activate a virtual environment.
+
+**Windows PowerShell**
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+**macOS / Linux**
 
 ```bash
-# Create virtual environment
-python -m venv .venv
-.venv\Scripts\activate          # Windows
-# source .venv/bin/activate     # macOS/Linux
-
-# Install dependencies
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
+```
 
-# Run training pipeline
+### Prepare the Dataset
+
+Download and extract the [UCI-HAR dataset](https://archive.ics.uci.edu/dataset/240/human+activity+recognition+using+smartphones), then configure the dataset path according to the project’s configuration and data-preparation script.
+
+Run:
+
+```bash
+python scripts/prepare_dataset.py
+```
+
+### Train and Evaluate the Model
+
+```bash
 python scripts/train.py
-
-# Evaluate on UCI-HAR test set
 python scripts/evaluate.py
+```
 
-# Run automated test suite
+Training requires the dataset files and the paths expected by the project configuration. The Android application uses the bundled model and scaler assets, so retraining is not required simply to run the app.
+
+### Run Automated Tests
+
+```bash
 python -m pytest -v
 ```
 
----
+For reproducible results, retain the dataset version, split configuration, model checkpoint, preprocessing parameters, and evaluation output associated with each experiment.
 
-## Dataset
+## Physical Device Validation
 
-**UCI Human Activity Recognition Using Smartphones Dataset**
+The project has been exercised on a physical Android smartphone using the live-monitoring and ML-diagnostics screens. Reported observations indicate that static activities such as Sitting generally produce more stable predictions, while dynamic activities can show greater variation.
 
-| Property | Value |
-|---|---|
-| Subjects | 30 volunteers, ages 19–48 |
-| Activities | 6 daily activities |
-| Sampling rate | 50 Hz |
-| Sensors | 3-axis accelerometer + 3-axis gyroscope |
-| Split | Subject-level (zero subject overlap train/test) |
-| Source | [UCI ML Repository](https://archive.ics.uci.edu/ml/datasets/human+activity+recognition+using+smartphones) |
+Performance can depend on phone placement, sensor orientation, walking speed, window boundaries, and the difference between hand-held use and the waist-mounted collection setup used by UCI-HAR.
 
----
+The benchmark metrics and physical-device observations should therefore be evaluated separately. Confidence values observed during a demonstration are not substitutes for a controlled real-world accuracy study.
 
-## Privacy Design
+## Future Improvements
 
-MotionShield performs all inference locally:
+- Evaluate generalization across different phone models, placements, and users.
+- Improve recognition of dynamic activities and transitions using broader validation data.
+- Profile inference latency, memory usage, and battery consumption across devices.
+- Explore model quantization and other mobile inference optimizations.
+- Validate fall detection against labeled real-world events and report false-positive and false-negative rates.
+- Evaluate the drowsiness and wrist-vitals modules independently before making stronger safety or health claims.
+- Expand activity analytics and accessible monitoring interfaces.
+- Introduce optional caregiver notifications only with appropriate user consent and secure data handling.
 
-- Sensor data never transmitted to external servers
-- No internet permission in AndroidManifest
-- Room database stored in device-private storage
-- No analytics, telemetry, or crash reporting SDKs
-- User profiles stored in device SharedPreferences only
+## Research Context
 
----
+MotionShield is based on the UCI-HAR smartphone-sensor benchmark and explores recurrent deep learning with temporal attention for time-series classification.
+
+**Primary dataset reference**
+
+Anguita, D., Ghio, A., Oneto, L., Parra, X., and Reyes-Ortiz, J. L., “A Public Domain Dataset for Human Activity Recognition Using Smartphones,” *Proceedings of the European Symposium on Artificial Neural Networks, Computational Intelligence and Machine Learning (ESANN)*, 2013, pp. 437–442.
 
 ## Disclaimer
 
-MotionShield is a research prototype and academic project. The wrist pulse feature uses inertial BCG sensing and is a fitness-grade estimation — not a certified medical device. Fall detection is an assistive monitoring feature — not a substitute for professional emergency medical services. Driver drowsiness detection is a supplementary safety aid — always prioritise safe driving practices over any on-screen alerts.
-
----
+MotionShield is an academic research and software engineering project. Its activity predictions, fall alerts, driver-safety indicators, and experimental wrist-vitals outputs are not certified medical or emergency systems. Do not rely on the application as a substitute for professional medical evaluation, validated monitoring equipment, or safe driving practices.
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+This project is intended to use the MIT License. Refer to the repository’s `LICENSE` file for the applicable terms.
+
+---
+
+**Core contribution:** A smartphone-based activity recognition pipeline combining Bi-LSTM with Temporal Attention, local inference, persistent session tracking, and separate sensor-based safety prototypes.
