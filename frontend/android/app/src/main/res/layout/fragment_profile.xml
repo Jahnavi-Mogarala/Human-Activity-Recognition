@@ -165,6 +165,20 @@
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/border_color" />
 
                 <TextView
+                    android:id="@+id/btnNavDriverDrowsiness"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="🚗  Driver Drowsiness Monitor"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:background="?attr/selectableItemBackground" />
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/border_color" />
+
+                <TextView
                     android:id="@+id/btnNavInstructions"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"

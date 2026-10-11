@@ -5,6 +5,8 @@
     <!-- Permissions required by sensor implementation -->
     <uses-permission android:name="android.permission.BODY_SENSORS"/>
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:name=".MotionShieldApp"

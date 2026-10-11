@@ -390,11 +390,22 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:text="🚨 Call 9440085239"
+                android:text="🚨 Helpline"
                 app:cornerRadius="12dp"
                 app:backgroundTint="#DC2626"
                 android:layout_marginStart="6dp" />
         </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnQuickDriverDrowsy"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="🚗 Driver Drowsiness Safety Monitor"
+            android:textColor="@color/text_primary"
+            app:strokeColor="@color/border_color"
+            app:cornerRadius="12dp"
+            android:layout_marginBottom="16dp" />
 
         <!-- HOW TO USE INSTRUCTIONS CARD -->
         <com.google.android.material.card.MaterialCardView

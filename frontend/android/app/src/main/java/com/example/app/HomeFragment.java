@@ -77,6 +77,11 @@ public class HomeFragment extends Fragment {
             btnWristVitals.setOnClickListener(v -> navigateTo(R.id.wristVitalCheckFragment));
         }
 
+        View btnDriverDrowsy = view.findViewById(R.id.btnQuickDriverDrowsy);
+        if (btnDriverDrowsy != null) {
+            btnDriverDrowsy.setOnClickListener(v -> navigateTo(R.id.driverDrowsinessFragment));
+        }
+
         View btnHelpline = view.findViewById(R.id.btnQuickHelpline);
         if (btnHelpline != null) {
             btnHelpline.setOnClickListener(v -> {

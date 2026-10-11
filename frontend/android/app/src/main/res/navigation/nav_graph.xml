@@ -67,4 +67,8 @@
         android:id="@+id/wristVitalCheckFragment"
         android:name="com.example.app.WristVitalCheckFragment"
         android:label="Wrist Vitals" />
+    <fragment
+        android:id="@+id/driverDrowsinessFragment"
+        android:name="com.example.app.DriverDrowsinessFragment"
+        android:label="Driver Drowsiness" />
 </navigation>

@@ -50,6 +50,11 @@ public class ProfileFragment extends Fragment {
             btnWristVitals.setOnClickListener(v -> navigateTo(R.id.wristVitalCheckFragment));
         }
 
+        View btnDriverDrowsy = view.findViewById(R.id.btnNavDriverDrowsiness);
+        if (btnDriverDrowsy != null) {
+            btnDriverDrowsy.setOnClickListener(v -> navigateTo(R.id.driverDrowsinessFragment));
+        }
+
         View btnInstructions = view.findViewById(R.id.btnNavInstructions);
         if (btnInstructions != null) {
             btnInstructions.setOnClickListener(v -> navigateTo(R.id.activityGuideFragment));
