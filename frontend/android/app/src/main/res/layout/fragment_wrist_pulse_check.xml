@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hold phone firmly against inner wrist pulse"
+            android:text="Hold phone's back firmly against your inner wrist (radial artery)"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             android:textColor="@color/text_secondary"
             android:layout_marginTop="2dp" />
@@ -62,13 +62,14 @@
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
+                    android:gravity="center"
                     android:layout_marginTop="12dp" />
 
                 <TextView
                     android:id="@+id/tvInstructionSteps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="• Sit relaxed with your arm resting on a flat table.\n• Hold phone's back against your radial wrist pulse point.\n• Press Start and remain steady for 15 seconds."
+                    android:text="1. Sit relaxed with arm resting on a flat surface.\n2. Press phone back firmly on inner wrist (below thumb).\n3. Tap Start and hold absolutely still for 15 seconds.\n4. Breathe normally — do NOT move your wrist."
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                     android:textColor="@color/text_secondary"
                     android:layout_marginTop="10dp" />
@@ -90,7 +91,7 @@
                     android:id="@+id/tvCountdownTimer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15s Remaining"
+                    android:text="15s remaining — breathe normally"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                     android:textColor="@color/colorError"
                     android:textStyle="bold"
@@ -157,7 +158,7 @@
                             android:id="@+id/tvHeartRateValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="74 BPM"
+                            android:text="-- BPM"
                             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                             android:textColor="@color/colorError"
                             android:textStyle="bold" />
@@ -185,7 +186,7 @@
                             android:id="@+id/tvBPValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="118/78"
+                            android:text="--/--"
                             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                             android:textColor="@color/colorPrimary"
                             android:textStyle="bold" />
@@ -243,7 +244,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Disclaimer: Ballistocardiographic inertial sensing provides fitness estimations. Not intended as a substitute for certified medical diagnostic equipment."
+            android:text="Disclaimer: Ballistocardiographic (BCG) inertial sensing provides fitness-grade estimations only. Not intended as a substitute for certified medical diagnostic equipment. Consult a healthcare professional for clinical assessment."
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             android:textColor="@color/text_secondary"
             android:layout_marginTop="16dp" />
