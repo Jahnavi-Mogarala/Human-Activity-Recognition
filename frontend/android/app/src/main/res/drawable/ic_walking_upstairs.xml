@@ -4,10 +4,12 @@
     android:height="120dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
+    <!-- Clean Stairs Outline -->
     <path
         android:fillColor="#16A34A"
-        android:pathData="M19,19v-4h-4v-4h-4v-4H7V3H3v18h16zM17,17h-4v-4h-4v-4H7V7"/>
+        android:pathData="M19,3h-4v4h-4v4H7v4H3v6h18V3zM17,19H5v-2h4v-4h4v-4h4V5h2v14z"/>
+    <!-- Clean Person Ascending Stairs -->
     <path
         android:fillColor="#16A34A"
-        android:pathData="M10.5,3.5c0.83,0 1.5,-0.67 1.5,-1.5s-0.67,-1.5 -1.5,-1.5 -1.5,0.67 -1.5,1.5 0.67,1.5 1.5,1.5zM12.5,7.5l-2,-2c-0.38,-0.38 -0.89,-0.59 -1.42,-0.59H6v2h2.2l1.6,1.6 -1.8,4.9 -3.5,-1.4 -0.7,1.9 4.9,2c0.41,0.17 0.88,0.08 1.19,-0.22l2.3,-2.3v3.9h2v-5.5l-2.7,-2.7z"/>
+        android:pathData="M9,3c0.83,0 1.5,-0.67 1.5,-1.5S9.83,0 9,0s-1.5,0.67 -1.5,1.5S8.17,3 9,3zM11.5,6.5L9.6,4.6C9.22,4.22 8.71,4 8.18,4H5v2h2.2l1.6,1.6 -1.8,4.9 -3.5,-1.4 -0.7,1.9 4.9,2c0.41,0.17 0.88,0.08 1.19,-0.22l2.3,-2.3v3.9h2v-5.5L11.5,6.5z"/>
 </vector>

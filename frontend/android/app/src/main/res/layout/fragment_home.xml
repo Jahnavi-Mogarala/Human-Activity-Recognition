@@ -32,17 +32,19 @@
                     android:id="@+id/tvGreeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="MotionShield"
+                    android:text="Hi, Jahnavi 👋"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                     android:textColor="@color/text_primary"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvUserSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Your movement, understood."
+                    android:text="Active User: Jahnavi • Multi-User Mode"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
                     android:layout_marginTop="2dp" />
             </LinearLayout>
 
@@ -341,7 +343,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="8dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnQuickGuide"
@@ -363,6 +365,73 @@
                 app:cornerRadius="12dp"
                 android:layout_marginStart="6dp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnQuickWristVitals"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="❤️ Wrist Vitals"
+                app:cornerRadius="12dp"
+                app:backgroundTint="@color/colorPrimary"
+                android:layout_marginEnd="6dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnQuickHelpline"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="🚨 Call 9440085239"
+                app:cornerRadius="12dp"
+                app:backgroundTint="#DC2626"
+                android:layout_marginStart="6dp" />
+        </LinearLayout>
+
+        <!-- HOW TO USE INSTRUCTIONS CARD -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardInstructions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/surface_color"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/border_color"
+            android:layout_marginBottom="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📖 Instructions: How to Use MotionShield"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1. Place Phone: Keep smartphone in front trouser pocket or waistband.\n2. Start Session: Tap 'Start Live Session' on Live tab to begin 50Hz tracking.\n3. Move Naturally: Bi-LSTM classifies Walking, Stairs, Sitting, Standing &amp; Laying.\n4. Fall Safety: Automatic impact monitoring prompts 9440085239 emergency assistance.\n5. Check Vitals: Tap 'Wrist Vitals' to measure radial pulse &amp; estimated BP."
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    android:textColor="@color/text_secondary"
+                    android:lineSpacingExtra="3dp"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- RECENT SESSIONS SECTION -->
         <TextView

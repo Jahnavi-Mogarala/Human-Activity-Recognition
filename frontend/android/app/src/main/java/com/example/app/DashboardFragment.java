@@ -51,6 +51,14 @@ public class DashboardFragment extends Fragment {
         timelineLogText = view.findViewById(R.id.timelineLogText);
         fallAlertCard = view.findViewById(R.id.fallAlertCard);
         btnFallDismiss = view.findViewById(R.id.btnFallDismiss);
+        MaterialButton btnFallCallHelpline = view.findViewById(R.id.btnFallCallHelpline);
+        if (btnFallCallHelpline != null) {
+            btnFallCallHelpline.setOnClickListener(v -> {
+                android.content.Intent dialIntent = new android.content.Intent(android.content.Intent.ACTION_DIAL);
+                dialIntent.setData(android.net.Uri.parse("tel:" + UserManager.HELPLINE_NUMBER));
+                startActivity(dialIntent);
+            });
+        }
 
         btnStart = view.findViewById(R.id.btnStart);
         btnPause = view.findViewById(R.id.btnPause);

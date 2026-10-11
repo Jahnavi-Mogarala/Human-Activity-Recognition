@@ -1,13 +1,17 @@
 package com.example.app;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -22,6 +26,7 @@ import java.util.Map;
 
 public class HomeFragment extends Fragment {
     private LiveMotionViewModel viewModel;
+    private TextView tvGreeting, tvUserSubtitle;
     private TextView tvHomeSessionCount, tvHomeActiveTime, tvHomeTopActivity, tvNoRecentSessions;
     private RecyclerView rvRecentSessions;
     private SessionAdapter adapter;
@@ -31,11 +36,20 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        tvGreeting = view.findViewById(R.id.tvGreeting);
+        tvUserSubtitle = view.findViewById(R.id.tvUserSubtitle);
         tvHomeSessionCount = view.findViewById(R.id.tvHomeSessionCount);
         tvHomeActiveTime = view.findViewById(R.id.tvHomeActiveTime);
         tvHomeTopActivity = view.findViewById(R.id.tvHomeTopActivity);
         tvNoRecentSessions = view.findViewById(R.id.tvNoRecentSessions);
         rvRecentSessions = view.findViewById(R.id.rvRecentSessions);
+
+        updateUserHeader();
+
+        View avatarImage = view.findViewById(R.id.avatarImage);
+        if (avatarImage != null) {
+            avatarImage.setOnClickListener(v -> showMultiUserDialog());
+        }
 
         if (rvRecentSessions != null) {
             rvRecentSessions.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -58,12 +72,63 @@ public class HomeFragment extends Fragment {
             btnInsights.setOnClickListener(v -> navigateTo(R.id.insightsFragment));
         }
 
+        View btnWristVitals = view.findViewById(R.id.btnQuickWristVitals);
+        if (btnWristVitals != null) {
+            btnWristVitals.setOnClickListener(v -> navigateTo(R.id.wristVitalCheckFragment));
+        }
+
+        View btnHelpline = view.findViewById(R.id.btnQuickHelpline);
+        if (btnHelpline != null) {
+            btnHelpline.setOnClickListener(v -> {
+                Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+                dialIntent.setData(Uri.parse("tel:" + UserManager.HELPLINE_NUMBER));
+                startActivity(dialIntent);
+            });
+        }
+
+        View cardInstructions = view.findViewById(R.id.cardInstructions);
+        if (cardInstructions != null) {
+            cardInstructions.setOnClickListener(v -> navigateTo(R.id.activityGuideFragment));
+        }
+
         View btnLearnFall = view.findViewById(R.id.btnLearnFallDetection);
         if (btnLearnFall != null) {
             btnLearnFall.setOnClickListener(v -> navigateTo(R.id.elderlySafetyFragment));
         }
 
         return view;
+    }
+
+    private void updateUserHeader() {
+        if (getContext() == null) return;
+        UserManager.UserProfile active = UserManager.getActiveUser(requireContext());
+        if (tvGreeting != null) tvGreeting.setText("Hi, " + active.name + " 👋");
+        if (tvUserSubtitle != null) tvUserSubtitle.setText("Active: " + active.name + " • Multi-User Mode");
+    }
+
+    private void showMultiUserDialog() {
+        if (getContext() == null) return;
+        List<UserManager.UserProfile> users = UserManager.getAllUsers();
+        String[] userNames = new String[users.size()];
+        for (int i = 0; i < users.size(); i++) {
+            userNames[i] = users.get(i).name + " (" + users.get(i).role + ")";
+        }
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Switch User Profile")
+                .setItems(userNames, (dialog, which) -> {
+                    UserManager.setActiveUser(requireContext(), users.get(which).id);
+                    updateUserHeader();
+                    Toast.makeText(requireContext(), "Active user: " + users.get(which).name, Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUserHeader();
     }
 
     @Override

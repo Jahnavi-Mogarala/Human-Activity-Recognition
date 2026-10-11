@@ -1,5 +1,7 @@
 package com.example.app;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,15 @@ public class ElderlySafetyFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_elderly_safety, container, false);
+        View view = inflater.inflate(R.layout.fragment_elderly_safety, container, false);
+        View btnCall = view.findViewById(R.id.btnCallHelplineSafety);
+        if (btnCall != null) {
+            btnCall.setOnClickListener(v -> {
+                Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+                dialIntent.setData(Uri.parse("tel:" + UserManager.HELPLINE_NUMBER));
+                startActivity(dialIntent);
+            });
+        }
+        return view;
     }
 }
