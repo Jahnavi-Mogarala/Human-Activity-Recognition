@@ -40,17 +40,18 @@ public class DashboardFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        activityNameText = view.findViewById(R.id.activityName);
-        mascotImage = view.findViewById(R.id.mascotImage);
-        confidenceRing = view.findViewById(R.id.confidenceRing);
-        confidenceText = view.findViewById(R.id.confidenceText);
+        activityNameText   = view.findViewById(R.id.activityName);
+        mascotImage        = view.findViewById(R.id.mascotImage);
+        confidenceRing     = view.findViewById(R.id.confidenceRing);
+        confidenceText     = view.findViewById(R.id.confidenceText);
         movementStatusText = view.findViewById(R.id.movementStatus);
-        sessionTimerText = view.findViewById(R.id.sessionTimerText);
-        sessionStatusText = view.findViewById(R.id.sessionStatus);
-        sensorStatusText = view.findViewById(R.id.sensorStatus);
-        timelineLogText = view.findViewById(R.id.timelineLogText);
-        fallAlertCard = view.findViewById(R.id.fallAlertCard);
-        btnFallDismiss = view.findViewById(R.id.btnFallDismiss);
+        sessionTimerText   = view.findViewById(R.id.sessionTimerText);
+        sessionStatusText  = view.findViewById(R.id.sessionStatus);
+        sensorStatusText   = view.findViewById(R.id.sensorStatus);
+        timelineLogText    = view.findViewById(R.id.timelineLogText);
+        fallAlertCard      = view.findViewById(R.id.fallAlertCard);
+        btnFallDismiss     = view.findViewById(R.id.btnFallDismiss);
+
         MaterialButton btnFallCallHelpline = view.findViewById(R.id.btnFallCallHelpline);
         if (btnFallCallHelpline != null) {
             btnFallCallHelpline.setOnClickListener(v -> {
@@ -62,7 +63,7 @@ public class DashboardFragment extends Fragment {
 
         btnStart = view.findViewById(R.id.btnStart);
         btnPause = view.findViewById(R.id.btnPause);
-        btnStop = view.findViewById(R.id.btnStop);
+        btnStop  = view.findViewById(R.id.btnStop);
         btnReset = view.findViewById(R.id.btnReset);
 
         View heroCard = view.findViewById(R.id.currentActivityCard);
@@ -76,7 +77,8 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity(), new LiveMotionViewModelFactory(requireActivity().getApplication()))
+        viewModel = new ViewModelProvider(requireActivity(),
+                new LiveMotionViewModelFactory(requireActivity().getApplication()))
                 .get(LiveMotionViewModel.class);
 
         setupObservers();
@@ -121,11 +123,10 @@ public class DashboardFragment extends Fragment {
                 }
             });
         }
+
         if (btnFallDismiss != null) {
             btnFallDismiss.setOnClickListener(v -> {
-                if (viewModel != null) {
-                    viewModel.dismissFallAlert();
-                }
+                if (viewModel != null) viewModel.dismissFallAlert();
             });
         }
     }
@@ -133,15 +134,14 @@ public class DashboardFragment extends Fragment {
     private void setupObservers() {
         viewModel.isFallDetected.observe(getViewLifecycleOwner(), fall -> {
             if (fallAlertCard != null) {
-                fallAlertCard.setVisibility((fall != null && fall) ? View.VISIBLE : View.GONE);
+                fallAlertCard.setVisibility(Boolean.TRUE.equals(fall) ? View.VISIBLE : View.GONE);
             }
         });
 
         viewModel.getSessionDurationMs().observe(getViewLifecycleOwner(), durationMs -> {
             if (durationMs != null) {
-                long elapsed = durationMs;
-                long seconds = (elapsed / 1000) % 60;
-                long minutes = (elapsed / (1000 * 60));
+                long seconds = (durationMs / 1000) % 60;
+                long minutes = durationMs / (1000 * 60);
                 if (sessionTimerText != null) {
                     sessionTimerText.setText(String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds));
                 }
@@ -150,30 +150,45 @@ public class DashboardFragment extends Fragment {
 
         viewModel.getSessionStatus().observe(getViewLifecycleOwner(), this::updateButtonStates);
 
+        // Activity prediction — only updates once first valid inference fires
         viewModel.getActivityIndex().observe(getViewLifecycleOwner(), classIdx -> {
             if (classIdx == null || classIdx < 0) return;
-            if (activityNameText != null) {
-                activityNameText.setText(ActivityLabels.getLabel(classIdx));
-            }
-            if (mascotImage != null) {
-                mascotImage.setImageResource(ActivityLabels.getDrawableRes(classIdx));
-            }
+            if (activityNameText != null) activityNameText.setText(ActivityLabels.getLabel(classIdx));
+            if (mascotImage != null) mascotImage.setImageResource(ActivityLabels.getDrawableRes(classIdx));
             if (movementStatusText != null) {
-                movementStatusText.setText(classIdx == 3 || classIdx == 4 || classIdx == 5 ? "Standing still" : "Moving");
+                movementStatusText.setText(classIdx >= 3 ? "Standing still" : "Moving");
             }
         });
 
+        // Confidence ring — show "Low confidence" label below 40%
         viewModel.getSmoothedScores().observe(getViewLifecycleOwner(), probs -> {
             if (probs == null) return;
             Integer idx = viewModel.getActivityIndex().getValue();
             int classIdx = (idx != null && idx >= 0) ? idx : 0;
-            float maxProb = (classIdx >= 0 && classIdx < probs.length) ? probs[classIdx] : 0f;
+            float maxProb = (classIdx < probs.length) ? probs[classIdx] : 0f;
             int percent = Math.min(100, Math.max(0, Math.round(maxProb * 100.0f)));
-            if (confidenceRing != null) {
-                confidenceRing.setProgress(percent);
-            }
+            if (confidenceRing != null) confidenceRing.setProgress(percent);
             if (confidenceText != null) {
-                confidenceText.setText(percent + "% confidence");
+                confidenceText.setText(percent < 40
+                        ? percent + "% — Low confidence"
+                        : percent + "% confidence");
+            }
+        });
+
+        // Buffer fill progress — shows "Buffering 47/128..." until first window is ready (~2.5s)
+        viewModel.getWindowSize().observe(getViewLifecycleOwner(), size -> {
+            if (size == null) return;
+            Boolean isRunning = viewModel.getIsSessionRunning().getValue();
+            Integer idx = viewModel.getActivityIndex().getValue();
+            boolean hasPrediction = (idx != null && idx >= 0);
+            if (Boolean.TRUE.equals(isRunning) && !hasPrediction && size < 128) {
+                if (activityNameText != null) {
+                    activityNameText.setText("Buffering " + size + " / 128 samples...");
+                }
+                if (sensorStatusText != null) {
+                    int secsLeft = Math.max(1, (128 - size) / 50);
+                    sensorStatusText.setText("● Collecting — first result in ~" + secsLeft + "s");
+                }
             }
         });
 
@@ -181,16 +196,21 @@ public class DashboardFragment extends Fragment {
             if (history == null || history.isEmpty()) return;
             if (timelineLogText != null) {
                 StringBuilder sb = new StringBuilder();
-                for (String ev : history) {
-                    sb.append("• ").append(ev).append("\n");
-                }
+                for (String ev : history) sb.append("• ").append(ev).append("\n");
                 timelineLogText.setText(sb.toString().trim());
             }
         });
 
         viewModel.getIsSessionRunning().observe(getViewLifecycleOwner(), isRunning -> {
             if (sensorStatusText != null) {
-                sensorStatusText.setText((isRunning != null && isRunning) ? "● Sensors Active" : "○ Sensors Inactive");
+                sensorStatusText.setText(Boolean.TRUE.equals(isRunning)
+                        ? "● Sensors Active"
+                        : "○ Sensors Inactive — tap Start Session");
+            }
+            if (!Boolean.TRUE.equals(isRunning)) {
+                if (activityNameText != null) activityNameText.setText("Ready to Detect");
+                if (confidenceText != null) confidenceText.setText("0% confidence");
+                if (confidenceRing != null) confidenceRing.setProgress(0);
             }
         });
     }
@@ -199,43 +219,27 @@ public class DashboardFragment extends Fragment {
         if (status == null) status = "READY";
         if (sessionStatusText != null) {
             switch (status) {
-                case "READY":
-                    sessionStatusText.setText("Ready to detect");
-                    break;
+                case "READY":    sessionStatusText.setText("Ready to detect"); break;
                 case "COLLECTING":
-                case "ANALYZING":
-                    sessionStatusText.setText("Session Active");
-                    break;
-                case "PAUSED":
-                    sessionStatusText.setText("Session Paused");
-                    break;
-                case "STOPPED":
-                    sessionStatusText.setText("Session Ended");
-                    break;
-                default:
-                    sessionStatusText.setText(status);
-                    break;
+                case "ANALYZING": sessionStatusText.setText("Session Active"); break;
+                case "PAUSED":   sessionStatusText.setText("Session Paused"); break;
+                case "STOPPED":  sessionStatusText.setText("Session Ended"); break;
+                default:         sessionStatusText.setText(status); break;
             }
         }
 
         if ("READY".equals(status) || "STOPPED".equals(status)) {
             if (btnStart != null) btnStart.setVisibility(View.VISIBLE);
             if (btnPause != null) btnPause.setVisibility(View.GONE);
-            if (btnStop != null) btnStop.setVisibility(View.GONE);
+            if (btnStop  != null) btnStop.setVisibility(View.GONE);
         } else if ("PAUSED".equals(status)) {
             if (btnStart != null) btnStart.setVisibility(View.GONE);
-            if (btnPause != null) {
-                btnPause.setVisibility(View.VISIBLE);
-                btnPause.setText("Resume");
-            }
-            if (btnStop != null) btnStop.setVisibility(View.VISIBLE);
-        } else { // ACTIVE / COLLECTING / ANALYZING
+            if (btnPause != null) { btnPause.setVisibility(View.VISIBLE); btnPause.setText("Resume"); }
+            if (btnStop  != null) btnStop.setVisibility(View.VISIBLE);
+        } else {
             if (btnStart != null) btnStart.setVisibility(View.GONE);
-            if (btnPause != null) {
-                btnPause.setVisibility(View.VISIBLE);
-                btnPause.setText("Pause");
-            }
-            if (btnStop != null) btnStop.setVisibility(View.VISIBLE);
+            if (btnPause != null) { btnPause.setVisibility(View.VISIBLE); btnPause.setText("Pause"); }
+            if (btnStop  != null) btnStop.setVisibility(View.VISIBLE);
         }
     }
 
@@ -243,7 +247,6 @@ public class DashboardFragment extends Fragment {
         try {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
             navController.navigate(destinationId);
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 }
